@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist - Luxe Jewels</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>💎 Luxe Jewels</h1>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="login.html" id="loginLink">Login</a></li>
+                <li><a href="register.html" id="registerLink">Register</a></li>
+                <li><a href="cart.html" id="cartLink">Cart <span class="cart-count" id="cartCount">0</span></a></li>
+                <li><a href="wishlist.html" class="active" id="wishlistLink">Wishlist <span class="wishlist-count" id="wishlistCount">0</span></a></li>
+                <li id="logoutItem" style="display: none;"><a href="#" id="logoutLink">Logout</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Wishlist Section -->
+    <section class="wishlist-section">
+        <div class="container">
+            <h2 class="section-title">My Wishlist</h2>
+            
+            <div id="wishlistMessage" class="message"></div>
+            
+            <div class="products-grid" id="wishlistItems">
+                <!-- Wishlist items will be loaded dynamically -->
+                <p class="loading">Loading wishlist...</p>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Load wishlist items on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            loadWishlist();
+            updateCartCount();
+            updateWishlistCount();
+        });
+
+        // Load wishlist items from backend
+        async function loadWishlist() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                document.getElementById('wishlistItems').innerHTML = 
+                    '<p class="error-message">Please <a href="login.html">login</a> to view your wishlist.</p>';
+                return;
+            }
+
+            try {
+                const wishlistItems = await fetchWishlistItems();
+                displayWishlistItems(wishlistItems);
+            } catch (error) {
+                console.error('Error loading wishlist:', error);
+                document.getElementById('wishlistItems').innerHTML = 
+                    '<p class="error-message">Failed to load wishlist. Please try again.</p>';
+            }
+        }
+
+        // Display wishlist items
+        function displayWishlistItems(items) {
+            const wishlistDiv = document.getElementById('wishlistItems');
+            
+            if (items.length === 0) {
+                wishlistDiv.innerHTML = '<p class="no-products">Your wishlist is empty. <a href="products.html">Start adding items!</a></p>';
+                return;
+            }
+
+            wishlistDiv.innerHTML = items.map(item => {
+                if (!item.product) {
+                    return `
+                        <div class="product-card">
+                            <div class="product-info">
+                                <h3>Unavailable product</h3>
+                                <p class="product-description">This item is no longer available.</p>
+                                <button class="btn btn-remove" onclick="removeFromWishlist('${item.id}')">Remove</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                return `
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="${item.product.imageUrl || 'https://via.placeholder.com/300x300?text=Jewellery'}" alt="${item.product.name}">
+                        <button class="wishlist-btn active" onclick="removeFromWishlist('${item.id}')" title="Remove from Wishlist">❤️</button>
+                    </div>
+                    <div class="product-info">
+                        <h3>${item.product.name}</h3>
+                        <p class="product-category">${item.product.category}</p>
+                        <p class="product-description">${item.product.description || ''}</p>
+                        <p class="product-price">₹${item.product.price.toFixed(2)}</p>
+                        <button class="btn btn-add-cart" onclick="addToCartHandler('${item.product.id}')">Add to Cart</button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Remove from wishlist
+        async function removeFromWishlist(wishlistItemId) {
+            try {
+                await removeWishlistItem(wishlistItemId);
+                showMessage('Item removed from wishlist', 'success');
+                loadWishlist();
+                updateWishlistCount();
+            } catch (error) {
+                console.error('Error removing item:', error);
+                showMessage('Failed to remove item. Please try again.', 'error');
+            }
+        }
+
+        // Add to cart from wishlist
+        async function addToCartFromWishlist(productId, wishlistItemId) {
+            await addToCartHandler(productId);
+        }
+
+        // Show message
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('wishlistMessage');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            setTimeout(() => {
+                messageDiv.textContent = '';
+                messageDiv.className = 'message';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

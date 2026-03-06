@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard | Luxe Jewels</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/user-dashboard.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none;">
+                    <h1>Luxe Jewels</h1>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Collections</a></li>
+                <li><a href="products.html?category=rings">Rings</a></li>
+                <li><a href="products.html?category=necklaces">Necklaces</a></li>
+                <li><a href="user-dashboard.html" class="active">My Account</a></li>
+            </ul>
+            <div class="nav-icons" style="display: flex; gap: 20px; align-items: center;">
+                <a href="wishlist.html" style="color: var(--dark-black); position: relative;">
+                    <i class="far fa-heart" style="font-size: 1.2rem;"></i>
+                    <span class="wishlist-count" id="navWishlistCount">0</span>
+                </a>
+                <a href="cart.html" style="color: var(--dark-black); position: relative;">
+                    <i class="fas fa-shopping-bag" style="font-size: 1.2rem;"></i>
+                    <span class="cart-count" id="navCartCount">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="user-profile-summary">
+                <div class="user-avatar" id="sidebarAvatar">LJ</div>
+                <h3 class="user-name" id="sidebarName">Loading...</h3>
+                <p class="user-email" id="sidebarEmail">...</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" onclick="switchTab('overview')"><i class="fas fa-th-large"></i>
+                        Overview</a></li>
+                <li><a href="#" onclick="switchTab('orders')"><i class="fas fa-box-open"></i> Orders</a></li>
+                <li><a href="#" onclick="switchTab('wishlist')"><i class="far fa-heart"></i> Wishlist</a></li>
+                <li><a href="#" onclick="switchTab('cart')"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+                <li><a href="#" onclick="switchTab('addresses')"><i class="fas fa-map-marker-alt"></i> Addresses</a>
+                </li>
+                <li><a href="#" onclick="switchTab('profile')"><i class="fas fa-user-edit"></i> Profile Settings</a>
+                </li>
+                <li><a href="#" onclick="switchTab('support')"><i class="fas fa-headset"></i> Support</a></li>
+                <li><a href="#" id="logoutBtn" style="color: var(--danger);"><i class="fas fa-sign-out-alt"></i>
+                        Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+
+            <!-- OVERVIEW SECTION -->
+            <section id="overview" class="dashboard-section active">
+
+                <!-- Header -->
+                <div class="overview-header"
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <div>
+                        <h2 class="section-heading" style="margin-bottom: 5px;">Welcome back, <span
+                                id="welcomeName">User</span></h2>
+                        <p class="text-muted">Here's what's happening with your account today.</p>
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <a href="products.html" class="btn-gold">Continue Shopping</a>
+                        <a href="#" onclick="switchTab('orders')" class="btn-outline">View My Orders</a>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Spent</span>
+                            <i class="fas fa-wallet stat-icon"></i>
+                        </div>
+                        <div class="stat-value" id="statSpent">₹0</div>
+                        <div class="stat-desc text-muted">Lifetime Order Value</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Orders</span>
+                            <i class="fas fa-shopping-bag stat-icon"></i>
+                        </div>
+                        <div class="stat-value" id="statOrders">0</div>
+                        <div class="stat-desc text-muted">Successful orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Wishlist</span>
+                            <i class="far fa-heart stat-icon"></i>
+                        </div>
+                        <div class="stat-value" id="statWishlist">0</div>
+                        <div class="stat-desc text-muted">Saved items</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Cart</span>
+                            <i class="fas fa-shopping-cart stat-icon"></i>
+                        </div>
+                        <div class="stat-value" id="statCart">0</div>
+                        <div class="stat-desc text-muted">Pending items</div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders Preview -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Orders</h3>
+                        <a href="#" onclick="switchTab('orders')" class="btn-link">View All Orders &rarr;</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="premium-table" id="recentOrdersTable">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersBody">
+                                <!-- Populated by JS -->
+                                <tr>
+                                    <td colspan="5" class="text-center">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Two Column Layout for Wishlist & Cart -->
+                <div class="overview-grid-2-col"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+
+                    <!-- Wishlist Preview -->
+                    <div class="content-card" style="height: 100%;">
+                        <div class="card-header">
+                            <h3 class="card-title">Wishlist Preview</h3>
+                            <a href="#" onclick="switchTab('wishlist')" class="btn-link">View All &rarr;</a>
+                        </div>
+                        <div id="overviewWishlist" style="display: flex; flex-direction: column; gap: 15px;">
+                            <!-- Populated by JS -->
+                            <p class="text-center text-muted">Loading...</p>
+                        </div>
+                    </div>
+
+                    <!-- Cart Preview -->
+                    <div class="content-card" style="height: 100%;">
+                        <div class="card-header">
+                            <h3 class="card-title">My Cart</h3>
+                            <a href="#" onclick="switchTab('cart')" class="btn-link">Go to Cart &rarr;</a>
+                        </div>
+                        <div id="overviewCart" style="display: flex; flex-direction: column; gap: 15px;">
+                            <!-- Populated by JS -->
+                            <p class="text-center text-muted">Loading...</p>
+                        </div>
+                        <div id="overviewCartSummary"
+                            style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px; display: none;">
+                            <div
+                                style="display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: 600; font-family: var(--font-heading); font-size: 1.1rem;">
+                                <span>Total</span>
+                                <span id="overviewCartTotal">₹0.00</span>
+                            </div>
+                            <a href="checkout.html" class="btn-gold" style="display: block; text-align: center;">Proceed
+                                to Checkout</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two Column Layout for Address & Profile -->
+                <div class="overview-grid-2-col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+
+                    <!-- Address Preview -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Default Address</h3>
+                            <a href="#" onclick="switchTab('addresses')" class="btn-link">Manage Addresses &rarr;</a>
+                        </div>
+                        <div id="overviewAddress">
+                            <p class="text-muted">Loading...</p>
+                        </div>
+                    </div>
+
+                    <!-- Profile Summary -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Profile Details</h3>
+                            <a href="#" onclick="switchTab('profile')" class="btn-link">Edit Profile &rarr;</a>
+                        </div>
+                        <div id="overviewProfile">
+                            <p class="text-muted">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ORDERS SECTION -->
+            <section id="orders" class="dashboard-section">
+                <div class="section-title">My Orders</div>
+                <div class="content-card">
+                    <div class="table-responsive">
+                        <table class="premium-table" id="ordersTable">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Items</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="ordersEmpty" style="display:none; text-align:center; padding: 20px;">
+                        <i class="fas fa-box-open"
+                            style="font-size: 3rem; color: var(--light-gray); margin-bottom: 10px;"></i>
+                        <p>No orders found.</p>
+                        <a href="products.html" class="btn-gold" style="margin-top:10px; display:inline-block;">Start
+                            Shopping</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- WISHLIST SECTION -->
+            <section id="wishlist" class="dashboard-section">
+                <div class="section-title">My Wishlist</div>
+                <div id="wishlistGrid" class="stats-grid"
+                    style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
+                    <!-- Populated by JS -->
+                </div>
+                <div id="wishlistEmpty" style="display:none; text-align:center; padding: 40px;">
+                    <p>Your wishlist is empty.</p>
+                </div>
+            </section>
+
+            <!-- CART SECTION -->
+            <section id="cart" class="dashboard-section">
+                <!-- Just a redirect or embedded view? Let's generic embed for now, but usually cart is separate page. 
+                      User requested "Cart Management" in dashboard. -->
+                <div class="section-title">Shopping Cart</div>
+                <div class="content-card">
+                    <div class="table-responsive">
+                        <table class="premium-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cartTableBody">
+                                <!-- JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top: 20px; text-align: right;">
+                        <h3 style="margin-bottom: 10px;">Total: <span id="cartTotal">₹0.00</span></h3>
+                        <a href="checkout.html" class="btn-gold">Proceed to Checkout</a>
+                    </div>
+                    <div id="cartEmpty" style="display:none; text-align:center; padding: 20px;">
+                        <p>Your cart is empty.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ADDRESSES SECTION -->
+            <section id="addresses" class="dashboard-section">
+                <div class="section-title">
+                    <span>My Addresses</span>
+                    <button class="btn-gold" onclick="openAddressModal()">+ Add New Address</button>
+                </div>
+                <div class="address-grid" id="addressList">
+                    <!-- Address Cards -->
+                </div>
+                <div id="addressEmpty" style="display:none; text-align:center; padding: 20px;">
+                    <p>No saved addresses.</p>
+                </div>
+            </section>
+
+            <!-- PROFILE SECTION -->
+            <section id="profile" class="dashboard-section">
+                <div class="section-title">Profile Settings</div>
+                <div class="content-card" style="max-width: 600px;">
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="profileNameInput" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="profileEmailInput" disabled
+                                style="background: var(--off-white);">
+                            <small style="color: var(--gray);">Email cannot be changed directly.</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="profilePhoneInput"
+                                placeholder="Enter phone number">
+                        </div>
+                        <div class="form-group" style="margin-top: 30px;">
+                            <label class="form-label">Change Password</label>
+                            <input type="password" class="form-control" id="newPassword" placeholder="New Password">
+                        </div>
+                        <button type="submit" class="btn-gold">Save Changes</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- SUPPORT SECTION -->
+            <section id="support" class="dashboard-section">
+                <div class="section-title">Support & Inquiries</div>
+                <div class="content-card" style="max-width: 600px;">
+                    <p style="margin-bottom: 20px;">Have a question? We're here to help.</p>
+                    <form id="supportForm">
+                        <div class="form-group">
+                            <label class="form-label">Type</label>
+                            <select class="form-control" id="supportType">
+                                <option>Order Issue</option>
+                                <option>Product Inquiry</option>
+                                <option>Custom Jewellery Request</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" id="supportMessage" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-gold">Submit Request</button>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Address Modal -->
+    <div id="addressModal" class="modal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+        <div class="modal-content"
+            style="background:white; padding:30px; border-radius:8px; width:90%; max-width:500px; position:relative;">
+            <button onclick="closeAddressModal()"
+                style="position:absolute; top:15px; right:15px; border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+            <h2 style="font-family: var(--font-heading); margin-bottom: 20px;">Add Address</h2>
+            <form id="addressForm">
+                <div class="form-group">
+                    <label class="form-label">Address Title (e.g. Home, Office)</label>
+                    <input type="text" id="addrLabel" class="form-control" required>
+                </div>
+                <!-- Other fields matching api.js requirements -->
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="addrName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    <input type="text" id="addrPhone" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Address Line 1</label>
+                    <input type="text" id="addrLine1" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Address Line 2</label>
+                    <input type="text" id="addrLine2" class="form-control">
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" id="addrCity" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">State</label>
+                        <input type="text" id="addrState" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Pincode</label>
+                    <input type="text" id="addrPin" class="form-control" required>
+                </div>
+                <button type="submit" class="btn-gold" style="width:100%;">Save Address</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/user-dashboard.js"></script>
+    <script>
+        // Inline tab switching logic (or move to js/user-dashboard.js)
+        function switchTab(tabId) {
+            // Update Menu
+            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+            const activeLink = document.querySelector(`.sidebar-menu a[onclick="switchTab('${tabId}')"]`);
+            if (activeLink) activeLink.classList.add('active');
+
+            // Update Content
+            document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            // Trigger data load if needed
+            // if(tabId === 'orders') loadOrders(); 
+            // etc... dealt with in user-dashboard.js
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Luxe Jewels</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        /* Style for Stripe Element */
+        #card-element {
+            background-color: white;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        .stripe-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>💎 Luxe Jewels</h1>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="login.html" id="loginLink">Login</a></li>
+                <li><a href="register.html" id="registerLink">Register</a></li>
+                <li><a href="cart.html" id="cartLink">Cart <span class="cart-count" id="cartCount">0</span></a></li>
+                <li><a href="wishlist.html" id="wishlistLink">Wishlist <span class="wishlist-count" id="wishlistCount">0</span></a></li>
+                <li id="logoutItem" style="display: none;"><a href="#" id="logoutLink">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="checkout-section">
+        <div class="container">
+            <h2 class="section-title">Checkout</h2>
+            <div id="checkoutMessage" class="message"></div>
+
+            <div class="checkout-container">
+                <div class="checkout-form-section">
+                    <h3>Shipping Address</h3>
+                    <form id="checkoutForm" class="checkout-form">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" name="address" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <input type="text" id="state" name="state" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="zipCode">Zip Code</label>
+                                <input type="text" id="zipCode" name="zipCode" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <input type="text" id="country" name="country" required>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 30px;">Secure Payment</h3>
+                        <div class="stripe-container">
+                            <label for="card-element">Credit or Debit Card</label>
+                            <div id="card-element">
+                                </div>
+                            <div id="card-errors" role="alert" style="color: red; margin-top: 10px;"></div>
+                        </div>
+
+                        <button type="submit" id="submit-button" class="btn btn-primary btn-block" style="margin-top: 20px;">Complete Order & Pay</button>
+                    </form>
+                </div>
+
+                <div class="order-summary-section">
+                    <h3>Order Summary</h3>
+                    <div id="orderItems"></div>
+                    <div class="summary-item">
+                        <span>Subtotal:</span>
+                        <span id="orderSubtotal">₹0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Tax (10%):</span>
+                        <span id="orderTax">₹0.00</span>
+                    </div>
+                    <div class="summary-item total">
+                        <span>Total:</span>
+                        <span id="orderTotal">₹0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // 3. Initialize Stripe Elements
+        const stripe = Stripe('pk_test_51Sx0Ic6suWqdRwXwW7pYoSFyzCjke4dlWOTlXQIVXpezMIs0t4fGHVkuxMH1bV7UgNJAVB0mpNUdN4v94CDLfkVO00gb14pfAB');
+        const elements = stripe.elements();
+        
+        // Custom styling for Stripe element
+        const style = {
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+            }
+        };
+
+        const card = elements.create('card', {style: style});
+        card.mount('#card-element');
+
+        // Handle real-time validation errors from the card Element.
+        card.addEventListener('change', function(event) {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            loadOrderSummary();
+            updateCartCount();
+            updateWishlistCount();
+        });
+
+        async function loadOrderSummary() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            try {
+                const cartItems = await fetchCartItems();
+                displayOrderSummary(cartItems);
+            } catch (error) {
+                showMessage('Failed to load order summary.', 'error');
+            }
+        }
+
+        function displayOrderSummary(items) {
+            // Filter out items with missing product data to prevent 0.00 calculation errors
+            const validItems = items.filter(item => item && item.product && item.product.price != null);
+
+            const orderItemsDiv = document.getElementById('orderItems');
+            
+            if (validItems.length === 0) {
+                 // If cart is empty or has only invalid items, redirect to cart
+                 if (items.length > 0) {
+                     console.warn("Cart contains invalid items (deleted products?)");
+                 }
+                 // Only redirect if truly empty to avoid loop if user stays on page
+                 if (items.length === 0) {
+                    window.location.href = 'cart.html';
+                    return;
+                 }
+            }
+
+            orderItemsDiv.innerHTML = validItems.map(item => `
+                <div class="order-item">
+                    <div class="order-item-info">
+                        <h4>${item.product.name}</h4>
+                        <p>Quantity: ${item.quantity}</p>
+                    </div>
+                    <div class="order-item-price">₹${(item.product.price * item.quantity).toFixed(2)}</div>
+                </div>
+            `).join('');
+
+            const subtotal = validItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+            const tax = subtotal * 0.10;
+            const total = subtotal + tax;
+
+            document.getElementById('orderSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
+            document.getElementById('orderTax').textContent = `₹${tax.toFixed(2)}`;
+            document.getElementById('orderTotal').textContent = `₹${total.toFixed(2)}`;
+        }
+
+        // 4. Handle Form Submission with Stripe Token
+        document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submit-button');
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Processing...";
+
+            const shippingAddress = {
+                fullName: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                address: document.getElementById('address').value.trim(),
+                city: document.getElementById('city').value.trim(),
+                state: document.getElementById('state').value.trim(),
+                zipCode: document.getElementById('zipCode').value.trim(),
+                country: document.getElementById('country').value.trim()
+            };
+
+            try {
+                // Step A: Create Order
+                const orderResponse = await createOrder(shippingAddress);
+                
+                if (orderResponse.success) {
+                    const orderId = orderResponse.orderId;
+
+                    // Step B: Create Stripe Token
+                    const result = await stripe.createToken(card);
+
+                    if (result.error) {
+                        showMessage(result.error.message, 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = "Complete Order & Pay";
+                    } else {
+                        // Step C: Send Token to Backend
+                        const paymentResult = await processPayment(orderId, result.token.id);
+                        
+                        if (paymentResult.success) {
+                            showMessage('Payment Successful! Order Placed.', 'success');
+
+                            // ✅ refresh navbar badge (Cart is already cleared by backend)
+                            if (typeof updateCartCount === "function") {
+                                updateCartCount();
+                            }
+
+                            // ✅ keep user logged in — just go home
+                            setTimeout(() => {
+                                window.location.href = 'index.html';
+                            }, 2000);
+                        }
+ else {
+                            showMessage('Payment failed: ' + paymentResult.message, 'error');
+                            submitBtn.disabled = false;
+                        }
+                    }
+                } else {
+                    showMessage('Failed to create order.', 'error');
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Checkout error:', error);
+                showMessage('An error occurred. Please try again.', 'error');
+                submitBtn.disabled = false;
+            }
+        });
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('checkoutMessage');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            window.scrollTo(0,0);
+        }
+    </script>
+</body>
+</html>

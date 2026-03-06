@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Luxe Jewels</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #555;
+            line-height: 1.6;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .invoice-box {
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            font-size: 16px;
+        }
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        .invoice-title {
+            font-size: 32px;
+            color: #333;
+            font-weight: bold;
+        }
+        .invoice-meta {
+            text-align: right;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .invoice-table th {
+            text-align: left;
+            background: #eee;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .invoice-table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .total-section {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .print-btn {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        @media print {
+            .print-btn { display: none; }
+            .invoice-box { box-shadow: none; border: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-box" id="invoiceContent">
+    <div class="invoice-header">
+        <div>
+            <div class="invoice-title">INVOICE</div>
+            <div style="color: #D4AF37; font-size: 20px; font-weight: bold;">💎 Luxe Jewels</div>
+            <p>123 Luxury Lane<br>Mumbai, MH 400001</p>
+        </div>
+        <div class="invoice-meta">
+            <p>
+                Invoice #: <span id="invoiceId">Loading...</span><br>
+                Date: <span id="invoiceDate">Loading...</span><br>
+                Order ID: <span id="orderId">Loading...</span>
+            </p>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+        <strong>Bill To:</strong><br>
+        <span id="customerName">Loading...</span><br>
+        <span id="customerEmail">Loading...</span><br>
+        <span id="customerAddress">Loading...</span>
+    </div>
+
+    <table class="invoice-table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="invoiceItems">
+            <!-- Items will be populated here -->
+        </tbody>
+    </table>
+
+    <div class="total-section">
+        <p>Subtotal: <span id="subtotal">₹0.00</span></p>
+        <p>Tax (10%): <span id="tax">₹0.00</span></p>
+        <p style="font-size: 24px; color: #333;">Total: <span id="total">₹0.00</span></p>
+    </div>
+
+    <div style="margin-top: 40px; text-align: center; color: #999; font-size: 14px;">
+        <p>Thank you for your business!</p>
+    </div>
+</div>
+
+<button class="print-btn" onclick="window.print()">Print Invoice</button>
+
+<script src="js/api.js"></script>
+<script src="js/invoice.js"></script>
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Luxe Jewels</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/products-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        html { scroll-behavior: smooth; }
+        
+        * {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        body {
+            background: #faf8f3;
+            min-height: 100vh;
+        }
+        
+        .products-section {
+            background: transparent !important;
+            padding: 60px 0;
+        }
+        .shop-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,246,243,0.95) 100%);
+            border-radius: 20px;
+            margin: 0 50px 50px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        .shop-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 52px;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin: 0 0 12px 0;
+            letter-spacing: 0.02em;
+        }
+        .shop-header p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            color: #6f6b66;
+            margin: 0;
+        }
+        .filters-sidebar {
+            background: linear-gradient(145deg, #ffffff 0%, #faf8f3 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 28px;
+            position: sticky;
+            top: 100px;
+            height: max-content;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+        }
+        .filters-sidebar h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: #1a1a1a;
+            margin: 0 0 24px 0;
+            padding-bottom: 16px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+        }
+        .filter-group {
+            margin-bottom: 24px;
+        }
+        .filter-group label {
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: #6f6b66;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 12px;
+            background: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        }
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15), inset 0 2px 4px rgba(0,0,0,0.03);
+        }
+        .quick-filters {
+            border-top: 1px solid rgba(212, 175, 55, 0.15);
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+        .quick-filters h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: #1a1a1a;
+            margin: 0 0 14px 0;
+        }
+        .quick-btn {
+            background: linear-gradient(135deg, #faf8f3 0%, #f5f0e8 100%);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 25px;
+            padding: 10px 18px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            color: #4a4a4a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 6px 8px 0;
+        }
+        .quick-btn:hover {
+            background: linear-gradient(135deg, #e6c35a 0%, #b8962e 100%);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
+        }
+        .assurance-box {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(250, 246, 239, 0.5) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .assurance-box h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            color: #1a1a1a;
+            margin: 0 0 14px 0;
+        }
+        .assurance-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .assurance-box li {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            color: #6f6b66;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .assurance-box li::before {
+            content: "✓";
+            color: #b49664;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>💎 Luxe Jewels</h1>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html" class="active">Shop</a></li>
+                <li id="dashboardItem" style="display:none;"><a href="user-dashboard.html" id="dashboardLink">Dashboard</a></li>
+                <li><a href="login.html" id="loginLink">Login</a></li>
+                <li><a href="register.html" id="registerLink">Register</a></li>
+                <li><a href="cart.html" id="cartLink">Cart <span class="cart-count" id="cartCount">0</span></a></li>
+                <li><a href="wishlist.html" id="wishlistLink">Wishlist <span class="wishlist-count" id="wishlistCount">0</span></a></li>
+                <li id="logoutItem" style="display: none;"><a href="#" id="logoutLink">Logout</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="products-section">
+        <div class="shop-header">
+            <h2>Shop Collection</h2>
+            <p>Discover timeless elegance in every piece</p>
+        </div>
+        <div class="container" style="max-width:100%;width:100%;padding:0 50px;display:grid;grid-template-columns:320px 1fr;gap:36px;">
+            <aside class="filters-sidebar" id="shopFilters">
+                <h3>Filters</h3>
+                <div class="filter-group">
+                    <label>Category</label>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="Rings">Rings</option>
+                        <option value="Necklaces">Necklaces</option>
+                        <option value="Earrings">Earrings</option>
+                        <option value="Bracelets">Bracelets</option>
+                        <option value="Watches">Watches</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Search</label>
+                    <input id="searchInput" type="text" placeholder="Search for jewelry...">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div class="filter-group">
+                        <label>Min Price</label>
+                        <input id="minPrice" type="number" placeholder="0">
+                    </div>
+                    <div class="filter-group">
+                        <label>Max Price</label>
+                        <input id="maxPrice" type="number" placeholder="100000">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Sort By</label>
+                    <select id="sortBy">
+                        <option value="">Featured</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="name">Name</option>
+                    </select>
+                </div>
+                <div class="quick-filters">
+                    <h4>Quick Filters</h4>
+                    <button id="quickNew" class="quick-btn">New Arrivals</button>
+                    <button id="quickUnder" class="quick-btn">Under ₹10k</button>
+                    <button id="quickGold" class="quick-btn">Gold</button>
+                    <button id="quickDiamond" class="quick-btn">Diamond</button>
+                </div>
+                <div class="assurance-box">
+                    <h4>Luxe Assurance</h4>
+                    <ul>
+                        <li>Certified Purity</li>
+                        <li>Free Insured Shipping</li>
+                        <li>Easy 7-day Returns</li>
+                        <li>Lifetime Maintenance</li>
+                    </ul>
+                </div>
+            </aside>
+            <div id="productsGrid" class="products-grid" style="grid-column: 2;">
+                <p class="loading">Loading products...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Luxe Jewels</h3>
+                    <p>Your trusted destination for premium jewellery</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Shop</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: info@luxejewels.com</p>
+                    <p>Phone: +1 234 567 8900</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Luxe Jewels. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        let allProducts = [];
+        let openedFromQuery = false;
+
+        async function loadProducts() {
+            console.log("📡 loadProducts called");
+
+            try {
+                allProducts = await fetchProducts();
+                console.log("📦 Products received:", allProducts.length);
+
+                displayProducts(allProducts);
+
+                const id = new URLSearchParams(location.search).get('id');
+                if (id && !openedFromQuery) {
+                    openedFromQuery = true;
+                    openProductModal(id);
+                }
+
+            } catch (error) {
+                console.error('❌ Error loading products:', error);
+                document.getElementById('productsGrid').innerHTML =
+                    '<p class="error-message">Failed to load products. Please try again later.</p>';
+            }
+        }
+
+        function displayProducts(products) {
+            console.log("🎨 displayProducts called with:", products.length, "products");
+            const productsGrid = document.getElementById('productsGrid');
+            console.log("📋 productsGrid element:", productsGrid);
+            
+            if (!productsGrid) {
+                console.error("❌ productsGrid not found!");
+                return;
+            }
+            
+            if (products.length === 0) {
+                productsGrid.innerHTML = '<p class="no-products">No products found.</p>';
+                return;
+            }
+
+            console.log("🎯 About to render products...");
+            productsGrid.innerHTML = products.map(p => `
+                <a href="products.html?id=${p.id}"
+                   onclick="event.preventDefault(); openProductModal('${p.id}')"
+                   style="position:relative;height:420px;border-radius:18px;overflow:hidden;text-decoration:none;color:white;
+                          background:url('${p.imageUrl || 'https://via.placeholder.com/600x400?text=Jewellery'}') center/cover no-repeat;
+                          box-shadow:0 24px 60px rgba(0,0,0,.15);">
+                    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78),transparent);"></div>
+                    <button title="Add to Wishlist" onclick="event.preventDefault();event.stopPropagation();toggleWishlist('${p.id}')" style="position:absolute;top:12px;right:12px;background:#fff;border:1px solid #e5e2dc;border-radius:22px;padding:8px 12px;cursor:pointer;color:#111;">❤️</button>
+                    <div style="position:absolute;bottom:30px;left:28px;">
+                        <div style="font-family:'Playfair Display',serif;font-size:24px;text-shadow:0 4px 12px rgba(0,0,0,.85);">
+                            ${p.name || ''}
+                        </div>
+                        <div style="font-family:Montserrat,sans-serif;opacity:.96;margin:6px 0 10px;text-shadow:0 4px 12px rgba(0,0,0,.85);">
+                            ${p.category || ''}
+                        </div>
+                        <div style="font-family:Montserrat,sans-serif;color:#fff;margin-bottom:12px;text-shadow:0 4px 12px rgba(0,0,0,.85);">
+                            ₹${Number(p.price || 0).toFixed(2)}
+                        </div>
+                        <div style="font-family:Montserrat,sans-serif;background:linear-gradient(135deg,#e6c35a,#b8962e);
+                                    padding:9px 20px;border-radius:24px;font-size:13px;font-weight:600;letter-spacing:.5px;">
+                            View Product
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+            
+            console.log("✅ Products rendered!");
+        }
+
+        function filterProducts() {
+            const category = document.getElementById('categoryFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const minPrice = parseFloat(document.getElementById('minPrice').value || '0');
+            const maxPrice = parseFloat(document.getElementById('maxPrice').value || '99999999');
+            const sortBy = document.getElementById('sortBy').value;
+
+            let filtered = allProducts;
+
+            if (category) {
+                filtered = filtered.filter(product => product.category === category);
+            }
+
+            if (searchTerm) {
+                filtered = filtered.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    (product.description && product.description.toLowerCase().includes(searchTerm)) ||
+                    product.category.toLowerCase().includes(searchTerm)
+                );
+            }
+            filtered = filtered.filter(product => {
+                const price = Number(product.price || 0);
+                return price >= minPrice && price <= maxPrice;
+            });
+            if (sortBy === 'price-low') filtered.sort((a,b)=>Number(a.price||0)-Number(b.price||0));
+            else if (sortBy === 'price-high') filtered.sort((a,b)=>Number(b.price||0)-Number(a.price||0));
+            else if (sortBy === 'name') filtered.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+
+            displayProducts(filtered);
+        }
+
+        function openProductModal(productId){
+            const p = allProducts.find(x => String(x.id) === String(productId));
+            if (p) return renderProductModal(p);
+            fetchProductById(productId).then(renderProductModal).catch(()=>{});
+        }
+        function renderProductModal(p){
+            const modal = document.getElementById('productModal');
+            const overlay = document.getElementById('productOverlay');
+            const img = document.getElementById('pmImage');
+            const nameEl = document.getElementById('pmName');
+            const priceEl = document.getElementById('pmPrice');
+            const catEl = document.getElementById('pmCategory');
+            const descEl = document.getElementById('pmDescription');
+            const skuEl = document.getElementById('pmSku');
+            img.src = p.imageUrl || 'https://via.placeholder.com/600x600?text=Jewellery';
+            nameEl.textContent = p.name || '';
+            priceEl.textContent = '₹' + Number(p.price || 0).toFixed(2);
+            catEl.textContent = p.category || '';
+            descEl.textContent = (p.description && p.description.trim())
+                ? p.description
+                : 'Crafted in premium materials with certified purity, designed for everyday elegance.';
+            skuEl.textContent = String(p.id || '');
+            document.getElementById('pmAddCart').onclick = function(){ addToCartHandler(String(p.id)); };
+            document.getElementById('pmWishlist').onclick = function(){ toggleWishlist(String(p.id)); };
+            overlay.style.display = 'block';
+            modal.style.display = 'grid';
+        }
+        function closeProductModal(){
+            document.getElementById('productOverlay').style.display = 'none';
+            document.getElementById('productModal').style.display = 'none';
+        }
+        
+        // Call loadProducts when page loads
+        window.addEventListener('DOMContentLoaded', loadProducts);
+    </script>
+    <div id="productOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:999;"></div>
+    <div id="productModal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;background:#fff;border:1px solid #ece9e1;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.18);padding:0;width:min(1040px,92vw);max-height:86vh;grid-template-columns:1fr 1fr;gap:0;overflow:hidden;">
+        <div style="position:relative;background:#faf9f6;min-height:420px;">
+            <img id="pmImage" src="" alt="" style="width:100%;height:100%;object-fit:cover;">
+            <button id="pmWishlist" style="position:absolute;top:12px;right:12px;background:#fff;border:1px solid #e5e2dc;border-radius:24px;padding:8px 12px;cursor:pointer;">❤️</button>
+        </div>
+        <div style="padding:24px;display:grid;gap:12px;">
+            <div id="pmName" style="font-family:'Playfair Display',serif;font-size:28px;color:#111;margin-bottom:6px;"></div>
+            <div id="pmCategory" style="font-family:Montserrat,sans-serif;color:#6f6b66;margin-bottom:10px;"></div>
+            <div id="pmPrice" style="font-family:Montserrat,sans-serif;color:#b49664;font-weight:700;margin-bottom:14px;"></div>
+            <div style="font-family:Montserrat,sans-serif;color:#111;margin-bottom:14px;">
+                <div style="color:#6f6b66;margin-bottom:6px;">SKU</div>
+                <div id="pmSku"></div>
+            </div>
+            <div id="pmDescription" style="font-family:Montserrat,sans-serif;color:#111;line-height:1.6;margin-bottom:16px;"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div style="background:#faf9f6;border:1px solid #ece9e1;border-radius:12px;padding:12px;">
+                    <div style="font-family:'Playfair Display',serif;color:#111;margin-bottom:6px;">Highlights</div>
+                    <ul style="list-style:none;padding:0;margin:0;font-family:Montserrat,sans-serif;color:#6f6b66;display:grid;gap:6px;">
+                        <li>• 18K Gold / Diamond</li>
+                        <li>• BIS Hallmarked</li>
+                        <li>• Hypoallergenic</li>
+                    </ul>
+                </div>
+                <div style="background:#faf9f6;border:1px solid #ece9e1;border-radius:12px;padding:12px;">
+                    <div style="font-family:'Playfair Display',serif;color:#111;margin-bottom:6px;">Delivery & Returns</div>
+                    <ul style="list-style:none;padding:0;margin:0;font-family:Montserrat,sans-serif;color:#6f6b66;display:grid;gap:6px;">
+                        <li>• Free insured shipping</li>
+                        <li>• Dispatch: 2–4 days</li>
+                        <li>• Easy 7-day returns</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="display:flex;gap:12px;">
+                <button id="pmAddCart" style="background:linear-gradient(135deg,#e6c35a,#b8962e);color:#fff;padding:12px 18px;border-radius:26px;border:none;font-family:Montserrat,sans-serif;font-weight:600;cursor:pointer;">Add to Cart</button>
+                <button onclick="closeProductModal()" style="background:#f3f1ec;color:#111;padding:12px 18px;border-radius:26px;border:1px solid #e5e2dc;font-family:Montserrat,sans-serif;cursor:pointer;">Close</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

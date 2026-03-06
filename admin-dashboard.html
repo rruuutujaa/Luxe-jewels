@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxe Jewels - Executive Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ========================================
+           LUXE JEWELS - ADMIN DASHBOARD
+           Luxury Minimalist Theme
+           ======================================== */
+        
+        :root {
+            /* Luxury Minimalist Palette */
+            --lux-white: #ffffff;
+            --lux-cream: #faf8f3;
+            --lux-beige: #f5efe6;
+            --lux-gold: #D4AF37;
+            --lux-gold-light: #e6c35a;
+            --lux-gold-dark: #b8962e;
+            --lux-gold-gradient: linear-gradient(135deg, #e6c35a, #b8962e);
+            --lux-navy: #0e2a4f;
+            --lux-navy-dark: #0a1f3a;
+            --lux-black: #0b0b0b;
+            --lux-gray: #8a8680;
+            --lux-gray-light: #a8a29e;
+            
+            /* Backgrounds */
+            --bg-primary: #faf8f3;
+            --bg-secondary: #f5efe6;
+            --bg-card: #ffffff;
+            
+            /* Borders */
+            --border-gold: rgba(212, 175, 55, 0.25);
+            --border-light: rgba(0, 0, 0, 0.06);
+            
+            /* Shadows - Premium Soft */
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --shadow-premium: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
+            
+            /* Status Colors */
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            
+            /* Typography */
+            --font-body: 'Montserrat', sans-serif;
+            --font-display: 'Playfair Display', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--lux-cream);
+            color: var(--lux-black);
+            overflow: hidden;
+            height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* ===== LUXURY BACKGROUND LAYERS ===== */
+        .bg-layer-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--lux-cream) 0%, var(--lux-beige) 100%);
+            z-index: -3;
+        }
+
+        .ambient-dots {
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(rgba(212, 175, 55, 0.12) 1px, transparent 1px);
+            background-size: 32px 32px;
+            z-index: -2;
+            opacity: 0.6;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 5% 15%, rgba(212, 175, 55, 0.06) 0%, transparent 35%),
+                radial-gradient(circle at 95% 85%, rgba(14, 42, 79, 0.04) 0%, transparent 35%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ===== DASHBOARD LAYOUT ===== */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== PREMIUM SIDEBAR - MATCHES INDEX.HTML NAVBAR ===== */
+        .sidebar {
+            background: var(--lux-navy);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            color: var(--lux-white);
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            position: relative;
+            height: 100vh;
+            border-right: 1px solid rgba(10, 18, 40, 0.65);
+        }
+
+        .sidebar-logo {
+            padding: 1.25rem 0;
+            border-bottom: 1px solid rgba(10, 18, 40, 0.65);
+            text-align: center;
+            background: var(--lux-navy);
+        }
+
+        .sidebar-logo h1 {
+            font-size: 1.8rem;
+            color: #f8f4ea;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Sidebar Navigation - Like index.html nav-menu */
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .sidebar-nav .nav-item {
+            margin: 0;
+        }
+
+        .sidebar-nav .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            padding: 0.875rem 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 0.95rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        .sidebar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: #b49664;
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .sidebar-nav .nav-link:hover {
+            color: #f7d57c;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-nav .nav-link:hover::after {
+            width: 60%;
+        }
+
+        .sidebar-nav .nav-link.active {
+            color: #f7d57c;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .sidebar-nav .nav-link.active::after {
+            width: 60%;
+            background: #b49664;
+        }
+
+        .sidebar-nav .nav-icon {
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Sidebar Footer */
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(10, 18, 40, 0.65);
+            background: var(--lux-navy-dark);
+        }
+
+        .sidebar-footer .nav-link {
+            justify-content: center;
+            padding: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        /* ===== MAIN CONTENT AREA ===== */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* ===== HEADER ===== */
+        .dashboard-header {
+            padding: 1.25rem 2rem;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-soft);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title h1 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--lux-navy);
+            margin-bottom: 0.1rem;
+            letter-spacing: -0.01em;
+        }
+
+        .header-subtitle {
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--lux-gold);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: var(--lux-gold-gradient);
+            color: var(--lux-white);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+            filter: brightness(1.08);
+        }
+
+        .btn-secondary {
+            background: var(--lux-white);
+            color: var(--lux-navy);
+            border: 1px solid var(--border-gold);
+        }
+
+        .btn-secondary:hover {
+            background: var(--lux-cream);
+            border-color: var(--lux-gold);
+            transform: translateY(-1px);
+        }
+
+        /* ===== DASHBOARD BODY ===== */
+        .dashboard-body {
+            padding: 1.5rem;
+            flex: 1;
+            background: transparent;
+        }
+
+        /* ===== LUXURY METRIC CARDS ===== */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .metric-card {
+            background: var(--lux-white);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: var(--shadow-card);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--lux-gold-gradient);
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-gold);
+            box-shadow: var(--shadow-hover), 0 0 30px rgba(212, 175, 55, 0.08);
+        }
+
+        .metric-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .metric-label {
+            color: var(--lux-gray);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .metric-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.05) 100%);
+            color: var(--lux-gold);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .metric-value {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--lux-navy);
+            letter-spacing: -0.02em;
+        }
+
+        .metric-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: var(--success);
+        }
+
+        .trend-down {
+            color: var(--danger);
+        }
+
+        /* ===== CHART CARDS ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-card {
+            background: var(--lux-white);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: var(--shadow-card);
+        }
+
+        .chart-card:hover {
+            border-color: var(--border-gold);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+        }
+
+        .chart-card.large {
+            grid-column: span 1;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.25rem;
+        }
+
+        .chart-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--lux-navy);
+        }
+
+        .chart-subtitle {
+            font-size: 0.75rem;
+            color: var(--lux-gray);
+            margin-top: 0.25rem;
+        }
+
+        .chart-body {
+            height: 220px;
+        }
+
+        .chart-card.large .chart-body {
+            height: 260px;
+        }
+
+        /* ===== DATA TABLE CARDS ===== */
+        .data-table-card {
+            background: var(--lux-white);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-card);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead th {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--lux-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-bottom: 2px solid var(--border-gold);
+            background: var(--lux-cream);
+        }
+
+        .data-table thead th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+
+        .data-table thead th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+
+        .data-table tbody tr {
+            transition: all 0.25s ease;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .data-table tbody tr:hover {
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.04) 0%, transparent 100%);
+        }
+
+        .data-table tbody td {
+            padding: 1rem;
+            font-size: 0.875rem;
+            color: var(--lux-black);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.35rem 0.875rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .status-paid {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+            color: var(--success);
+            border: 1px solid rgba(5, 150, 105, 0.2);
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, rgba(217, 119, 6, 0.1) 0%, rgba(217, 119, 6, 0.05) 100%);
+            color: var(--warning);
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+
+        .status-cancelled {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
+            color: var(--danger);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        /* ===== SCROLLBAR ===== */
+        .dashboard-body::-webkit-scrollbar,
+        .main-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .dashboard-body::-webkit-scrollbar-track,
+        .main-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .dashboard-body::-webkit-scrollbar-thumb,
+        .main-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--lux-gold-light), var(--lux-gold-dark));
+            border-radius: 3px;
+        }
+
+        .dashboard-body::-webkit-scrollbar-thumb:hover,
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: var(--lux-gold);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1400px) {
+            .charts-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .chart-card.large {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 70px 1fr;
+            }
+            
+            .nav-link span:not(.nav-icon) {
+                display: none;
+            }
+            
+            .logo-text {
+                justify-content: center;
+            }
+            
+            .logo-subtitle {
+                display: none;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .dashboard-body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<div class="bg-layer-fixed"></div>
+<div class="bg-overlay-glass"></div>
+<div class="ambient-glow"></div>
+<div class="ambient-dots"></div>
+
+<div class="dashboard-container">
+    <!-- Sidebar - Styled like index.html navbar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h1>💎 Luxe Jewels</h1>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-target="overview">
+                        <span class="nav-icon">📊</span>
+                        <span>Overview</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-target="orders">
+                        <span class="nav-icon">📦</span>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-target="products">
+                        <span class="nav-icon">💍</span>
+                        <span>Products</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-target="users">
+                        <span class="nav-icon">👥</span>
+                        <span>Customers</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-target="wishlist">
+                        <span class="nav-icon">⭐</span>
+                        <span>Wishlist</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-target="cart">
+                        <span class="nav-icon">🛍️</span>
+                        <span>Cart</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="index.html" class="nav-link">
+                <span class="nav-icon">🏠</span>
+                <span>Back to Store</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Luxury Hero Header -->
+        <div style="
+                position: relative;
+                padding: 4rem 2.5rem;
+                margin: 1.5rem;
+                border-radius: 24px;
+                overflow: hidden;
+                background: url('https://images.pexels.com/photos/5485125/pexels-photo-5485125.jpeg') center/cover no-repeat;
+                box-shadow: var(--shadow-premium);
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                min-height: 240px;
+            ">
+            <div
+                style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(14, 42, 79, 0.9), transparent);">
+            </div>
+            <div style="position: relative; z-index: 2; color: white;">
+                <p
+                    style="letter-spacing: 3px; font-size: 0.75rem; text-transform: uppercase; color: var(--lux-gold); margin-bottom: 0.5rem;">
+                    Executive Overview</p>
+                <h1 id="adminWelcome"
+                    style="font-size: 3rem; margin: 0; color: white; font-family: 'Playfair Display', serif;">Welcome,
+                    Admin</h1>
+                <p style="opacity: 0.8; font-size: 1rem; max-width: 500px; margin-top: 0.5rem;">Managing the world's
+                    most exquisite jewellery collection with precision and elegance.</p>
+            </div>
+        </div>
+
+        <!-- Header (Floating Utility) -->
+        <header class="dashboard-header"
+            style="margin: 0 1.5rem 1.5rem; border-radius: 16px; background: rgba(255, 255, 255, 0.6);">
+            <div class="header-title">
+                <p class="header-subtitle" style="margin: 0;">Real-time business intelligence</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" id="btnRefresh"
+                    style="border-radius: 30px; background: rgba(255,255,255,0.5);">
+                    <span>🔄</span>
+                    Refresh Data
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Body -->
+        <div class="dashboard-body">
+            <section id="overview">
+                <!-- Metrics Grid -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Revenue</span>
+                            <div class="metric-icon">
+                                💰
+                            </div>
+                        </div>
+                        <div class="metric-value" id="statRevenue">₹0</div>
+                        <div class="metric-trend trend-up">
+                            <span>▲</span>
+                            <span>12.5%</span>
+                            <span style="color: var(--text-secondary)">vs last month</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Orders</span>
+                            <div class="metric-icon">
+                                📦
+                            </div>
+                        </div>
+                        <div class="metric-value" id="statOrders">0</div>
+                        <div class="metric-trend trend-up">
+                            <span>▲</span>
+                            <span>8.2%</span>
+                            <span style="color: var(--text-secondary)">vs last month</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Customers</span>
+                            <div class="metric-icon">
+                                👥
+                            </div>
+                        </div>
+                        <div class="metric-value" id="statUsers">0</div>
+                        <div class="metric-trend trend-up">
+                            <span>▲</span>
+                            <span>15.3%</span>
+                            <span style="color: var(--text-secondary)">vs last month</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Products</span>
+                            <div class="metric-icon">
+                                💍
+                            </div>
+                        </div>
+                        <div class="metric-value" id="statProducts">0</div>
+                        <div class="metric-trend trend-up">
+                            <span>▲</span>
+                            <span>5.1%</span>
+                            <span style="color: var(--text-secondary)">vs last month</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+                    <!-- Revenue Chart -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Revenue Trend</h3>
+                                <p class="chart-subtitle">Monthly revenue performance</p>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chartRevenueLine"></canvas></div>
+                    </div>
+
+                    <!-- Order Status -->
+
+
+                    
+
+                    <!-- Customer Analytics -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Customer Growth</h3>
+                                <p class="chart-subtitle">Monthly acquisitions</p>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chartCustomerGrowthLine"></canvas></div>
+                    </div>
+
+                    <!-- Category Performance -->
+                    <div class="chart-card">
+                        <div class="chart-header"><!-- Top Products -->
+<div class="chart-card">
+    <div class="chart-header">
+        <div style="text-align:left;">
+            <h3 class="chart-title">Top Products</h3>
+            <p class="chart-subtitle">Best sellers this month</p>
+        </div>
+    </div>
+    <div class="chart-body">
+        <canvas id="chartTopSellingProductsBar"></canvas>
+    </div>
+</div>
+
+                            <div>
+                                <h3 class="chart-title">Category Performance</h3>
+                                <p class="chart-subtitle">Sales by category</p>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chartCategoryPerformanceBar"></canvas></div>
+                    </div>
+                    <!-- Returning vs First-time (Donut KPI) -->
+
+
+                </div>
+
+                <!-- Recent Orders Table -->
+                <div class="data-table-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Recent Orders</h3>
+                            <p class="chart-subtitle">Latest transactions</p>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Payment</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <section id="products" style="display:none;">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">Total Products</span></div>
+                        <div class="metric-value" id="prodTotal">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">Active Products</span></div>
+                        <div class="metric-value" id="prodActive">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">Low Stock</span></div>
+                        <div class="metric-value" id="prodLowStock">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">Categories</span></div>
+                        <div class="metric-value" id="prodCategories">0</div>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-card">
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Price Distribution</h3>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chartPriceHistogram"></canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Top Revenue Products</h3>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chartTopRevenueProductsProducts"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- Products Table Section -->
+                <div class="table-container"
+                    style="background: white; border-radius: 16px; padding: 1.5rem; margin-top: 1.5rem; box-shadow: var(--shadow-soft);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 class="chart-title" style="margin: 0;">Product Inventory</h3>
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <div class="dropdown" style="position: relative; display: inline-block;">
+                                <button class="btn btn-secondary" id="btnSortProduct"
+                                    style="border-radius: 30px; background-color: #f0f4ff; color: #4361ee; border: none; padding: 0.5rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(67, 97, 238, 0.1);">
+                                    <span>🔃</span> Sort By ⬇️
+                                </button>
+                                <div id="sortDropdown" class="dropdown-content"
+                                    style="display: none; position: absolute; right: 0; background-color: #fff; min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1; border-radius: 12px; padding: 0.5rem 0;">
+                                    <a href="#" class="sort-option" data-sort="price"
+                                        style="color: black; padding: 12px 16px; text-decoration: none; display: block;">Price
+                                        (Low to High)</a>
+                                    <a href="#" class="sort-option" data-sort="category"
+                                        style="color: black; padding: 12px 16px; text-decoration: none; display: block;">Category</a>
+                                    <a href="#" class="sort-option" data-sort="name"
+                                        style="color: black; padding: 12px 16px; text-decoration: none; display: block;">Alphabetical
+                                        (A-Z)</a>
+                                    <a href="#" class="sort-option" data-sort="stock"
+                                        style="color: black; padding: 12px 16px; text-decoration: none; display: block;">Stock
+                                        (Low to High)</a>
+                                </div>
+                            </div>
+                            <button class="btn btn-danger" id="btnRemoveProduct"
+                                style="border-radius: 30px; background-color: #ff4d4d; color: white; border: none; padding: 0.5rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);">
+                                <span>🗑️</span> Remove Products
+                            </button>
+                            <button class="btn btn-primary" id="btnAddProduct"
+                                style="border-radius: 30px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);">
+                                <span>➕</span> Add Product
+                            </button>
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table" id="productsTable" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid #f0f0f0;">
+                                    <th
+                                        style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600;">
+                                        Image</th>
+                                    <th
+                                        style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600;">
+                                        Name</th>
+                                    <th
+                                        style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600;">
+                                        Category</th>
+                                    <th
+                                        style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600;">
+                                        Price</th>
+                                    <th
+                                        style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600;">
+                                        Stock</th>
+                                    <th
+                                        style="padding: 1rem; text-align: left; color: var(--text-secondary); font-weight: 600;">
+                                        Status</th>
+                                    <th
+                                        style="padding: 1rem; text-align: right; color: var(--text-secondary); font-weight: 600;">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <section id="users" style="display:none;">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">Users with Orders</span></div>
+                        <div class="metric-value" id="usersWithOrders">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">Users without Orders</span></div>
+                        <div class="metric-value" id="usersNoOrders">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">New Users (7d)</span></div>
+                        <div class="metric-value" id="newUsers7d">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">At-Risk Users</span></div>
+                        <div class="metric-value" id="atRiskUsers">0</div>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Daily Signups (7 days)</h3>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chartDailySignups7"></canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Daily Signups (30 days)</h3>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chartDailySignups30"></canvas></div>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Top Spending Users</h3>
+                            </div>
+                        </div>
+                        <div class="chart-body" id="apexTopSpendingUsersBar"></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Most Visiting Users</h3>
+                                <p class="chart-subtitle">Proxy: order interactions</p>
+                            </div>
+                        </div>
+                        <div class="chart-body" id="apexMostVisitingUsersBar"></div>
+                    </div>
+                </div>
+                <div class="data-table-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">User Directory</h3>
+                            <p class="chart-subtitle">Search and filter</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:.5rem;">
+                        <input type="text" id="userSearch" placeholder="Search name/email" class="form-control"
+                            style="max-width:280px;">
+                        <input type="date" id="userJoinedStart" class="form-control">
+                        <input type="date" id="userJoinedEnd" class="form-control">
+                        <button class="btn btn-secondary" id="userFilterApply">Apply</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Joined</th>
+                                    <th>Orders</th>
+                                    <th>Spent (₹)</th>
+                                    <th>Tags</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersDirectoryTbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+            <section id="wishlist" style="display:none;">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Total Wishlist Items</span>
+                            <div class="metric-icon"
+                                style="background: linear-gradient(135deg, #F4E4C1 0%, #FFF7E6 100%);">❤️</div>
+                        </div>
+                        <div class="metric-value" id="kpiWishlistTotal">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Most Wishlisted Product</span>
+                            <div class="metric-icon"
+                                style="background: linear-gradient(135deg, #F4E4C1 0%, #FFF7E6 100%);">⭐</div>
+                        </div>
+                        <div class="metric-value" id="kpiMostWishProduct">-</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Avg Wishlist Items per User</span>
+                            <div class="metric-icon"
+                                style="background: linear-gradient(135deg, #F4E4C1 0%, #FFF7E6 100%);">👥</div>
+                        </div>
+                        <div class="metric-value" id="kpiWishlistAvgPerUser">N/A</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Wishlist → Cart Conversion %</span>
+                            <div class="metric-icon"
+                                style="background: linear-gradient(135deg, #F4E4C1 0%, #FFF7E6 100%);">💰</div>
+                        </div>
+                        <div class="metric-value" id="kpiWishlistConversion">0%</div>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Top 5 Wishlisted Products</h3>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chartTopWishlistedProducts"></canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Wishlist → Cart → Purchased</h3>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chartWishlistFunnel"></canvas></div>
+                    </div>
+                </div>
+                <div class="data-table-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Top Wishlist Users</h3>
+                            <p class="chart-subtitle">Based on available data</p>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Wishlist Count</th>
+                                    <th>Orders Count</th>
+                                    <th>Total Spent (₹)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wishlistTopUsersTbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="data-table-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">High Wishlist + Low Stock Alert</h3>
+                            <p class="chart-subtitle">Monitor products with low stock</p>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Wishlist Count</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wishlistLowStockAlertTbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <section id="cart" style="display:none;">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Active Carts</span>
+                            <div class="metric-icon"
+                                style="background: linear-gradient(135deg, #F4E4C1 0%, #FFF7E6 100%);">🛒</div>
+                        </div>
+                        <div class="metric-value" id="kpiActiveCarts">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Users With Cart Items</span>
+                            <div class="metric-icon"
+                                style="background: linear-gradient(135deg, #F4E4C1 0%, #FFF7E6 100%);">👥</div>
+                        </div>
+                        <div class="metric-value" id="kpiUsersWithCart">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Total Items in Carts</span>
+                            <div class="metric-icon"
+                                style="background: linear-gradient(135deg, #F4E4C1 0%, #FFF7E6 100%);">🧮</div>
+                        </div>
+                        <div class="metric-value" id="kpiTotalCartItems">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-label">Total Cart Value</span>
+                            <div class="metric-icon"
+                                style="background: linear-gradient(135deg, #F4E4C1 0%, #FFF7E6 100%);">₹</div>
+                        </div>
+                        <div class="metric-value" id="kpiTotalCartValue">₹0</div>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Top 5 Added-to-Cart Products</h3>
+                                <p class="chart-subtitle">🔥 High Interest</p>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chartTopAddedProductsBar"></canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Cart Value Distribution</h3>
+                            </div>
+                        </div>
+                        <div class="chart-body"><canvas id="chartCartValueDistribution"></canvas></div>
+                    </div>
+                </div>
+                <div class="data-table-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Active Carts</h3>
+                            <p class="chart-subtitle">Current user activity</p>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>User Name</th>
+                                    <th>Items Count</th>
+                                    <th>Cart Value</th>
+                                    <th>Top Product</th>
+                                    <th>Last Updated</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cartsActiveTbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <section id="orders">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">Total Orders</span></div>
+                        <div class="metric-value" id="ordersTotal">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">Orders This Month</span></div>
+                        <div class="metric-value" id="ordersThisMonth">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">Today’s Orders</span></div>
+                        <div class="metric-value" id="ordersToday">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">Average Order Value</span></div>
+                        <div class="metric-value" id="ordersAOV">₹0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-header"><span class="metric-label">Total Revenue from Orders</span></div>
+                        <div class="metric-value" id="ordersRevenue">₹0</div>
+                    </div>
+                </div>
+
+                <section id="orders">
+                    <div class="metrics-grid">
+                        <!-- metrics cards -->
+                    </div>
+
+                    <div class="charts-grid four-charts">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div>
+                                    <h3 class="chart-title">Top Customers by Orders</h3>
+                                </div>
+                            </div>
+                            <div class="chart-body"><canvas id="chartTopCustomersOrdersPage"></canvas></div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div>
+                                    <h3 class="chart-title">Most Ordered Products</h3>
+                                </div>
+                            </div>
+                            <div class="chart-body"><canvas id="chartTopOrderedProductsBar"></canvas></div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div>
+                                    <h3 class="chart-title">Least Ordered Products</h3>
+                                </div>
+                            </div>
+                            <div class="chart-body"><canvas id="chartLeastOrderedProductsBar"></canvas></div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div>
+                                    <h3 class="chart-title">Top Revenue Products</h3>
+                                </div>
+                            </div>
+                            <div class="chart-body"><canvas id="chartTopRevenueProductsBar"></canvas></div>
+                        </div>
+                    </div>
+
+                    <div class="data-table-card">
+                        <!-- orders table -->
+                    </div>
+                </section>
+
+
+                <div class="data-table-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Orders</h3>
+                            <p class="chart-subtitle">All transactions</p>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Order</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Payment</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersPageTbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/cart-analytics.js"></script>
+<script src="js/admin-analytics.js"></script>
+<script src="js/admin-dashboard.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.AdminAnalytics && typeof window.AdminAnalytics.init === 'function') {
+            window.AdminAnalytics.init();
+        }
+        if (window.CartAnalytics && typeof window.CartAnalytics.init === 'function') {
+            window.CartAnalytics.init();
+        }
+        const btn = document.getElementById('btnRefresh');
+        if (btn && window.AdminAnalytics && typeof window.AdminAnalytics.refreshCharts === 'function') {
+            btn.addEventListener('click', () => window.AdminAnalytics.refreshCharts());
+        }
+        if (btn && window.CartAnalytics && typeof window.CartAnalytics.refresh === 'function') {
+            btn.addEventListener('click', () => window.CartAnalytics.refresh());
+        }
+        if (typeof setupProductModal === 'function') {
+            setupProductModal();
+        }
+    });
+</script>
+
+<!-- Add Product Modal -->
+<div id="addProductModal" class="modal"
+    style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(5px);">
+    <div class="modal-content"
+        style="background-color: #fefefe; margin: 5% auto; padding: 0; border: 1px solid #888; width: 50%; max-width: 600px; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+        <div class="modal-header"
+            style="padding: 1.5rem 2rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="margin: 0; color: var(--lux-navy); font-family: 'Playfair Display', serif;">Add New Product</h2>
+            <span id="closeAddProductModal" class="close"
+                style="color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+        </div>
+        <div class="modal-body" style="padding: 2rem;">
+            <form id="addProductForm">
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="productName"
+                        style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Product
+                        Name</label>
+                    <input type="text" id="productName" name="name" required
+                        style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <label for="productCategory"
+                            style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Category</label>
+                        <select id="productCategory" name="category" required
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; background-color: white;">
+                            <option value="" disabled selected>Select Category</option>
+                            <option value="Rings">Rings</option>
+                            <option value="Bangles">Bangles</option>
+                            <option value="Necklaces">Necklaces</option>
+                            <option value="Earrings">Earrings</option>
+                            <option value="Pendants">Pendants</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="productPrice"
+                            style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Price
+                            (₹)</label>
+                        <input type="number" id="productPrice" name="price" min="0" step="0.01" required
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="productImage"
+                        style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Image
+                        URL</label>
+                    <input type="url" id="productImage" name="imageUrl" required
+                        placeholder="https://example.com/image.jpg"
+                        style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="productStock"
+                        style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Stock
+                        Quantity</label>
+                    <input type="number" id="productStock" name="stock" min="0" value="50" required
+                        style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="productDescription"
+                        style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Description</label>
+                    <textarea id="productDescription" name="description" rows="4"
+                        style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <label class="checkbox-container" style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="productActive" name="isActive" checked
+                            style="width: 18px; height: 18px; margin-right: 0.5rem; accent-color: var(--lux-gold);">
+                        <span style="color: var(--text-secondary); font-weight: 500;">Product is Active</span>
+                    </label>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                    <button type="button" id="cancelAddProduct" class="btn btn-secondary"
+                        style="border-radius: 30px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary"
+                        style="border-radius: 30px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);">Add
+                        Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Remove Product Modal -->
+<div id="removeProductModal" class="modal"
+    style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(5px);">
+    <div class="modal-content"
+        style="background-color: #fefefe; margin: 5% auto; padding: 0; border: 1px solid #888; width: 50%; max-width: 600px; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+        <div class="modal-header"
+            style="padding: 1.5rem 2rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="margin: 0; color: var(--lux-navy); font-family: 'Playfair Display', serif;">Remove Products</h2>
+            <span id="closeRemoveProductModal" class="close"
+                style="color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+        </div>
+        <div class="modal-body" style="padding: 2rem;">
+            <p style="margin-bottom: 1rem; color: var(--text-secondary);">Select products to remove:</p>
+            <div id="removeProductList" style="max-height: 400px; overflow-y: auto; display: grid; gap: 1rem;">
+                <!-- Products will be populated here -->
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+                <button type="button" id="cancelRemoveProduct" class="btn btn-secondary"
+                    style="border-radius: 30px;">Cancel</button>
+                <button type="button" id="confirmRemoveProduct" class="btn btn-danger"
+                    style="border-radius: 30px; background-color: #ff4d4d; color: white; border: none; padding: 0.5rem 1.5rem; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);">Delete
+                    Selected</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

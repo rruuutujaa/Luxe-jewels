@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - Luxe Jewels</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .thank-you-container {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .success-icon {
+            font-size: 80px;
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+        .order-id-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #ccc;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 1.2rem;
+        }
+        .status-badge {
+            background: #27ae60;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="thank-you-container">
+            <div class="success-icon">Checkmark</div>
+            <h1>Order Confirmed!</h1>
+            <p>Thank you for your purchase. Your payment was processed successfully.</p>
+            
+            <div class="order-id-box">
+                Order ID: <span id="displayOrderId">--------</span>
+            </div>
+            
+            <p>Status: <span class="status-badge">PAID</span></p>
+            
+            <p style="margin-top: 30px; color: #666;">A confirmation email has been sent to your inbox.</p>
+            
+            <div style="margin-top: 40px;">
+                <a href="products.html" class="btn btn-primary">Continue Shopping</a>
+                <button onclick="window.print()" class="btn btn-secondary">Print Receipt</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get the Order ID from the URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId');
+        if (orderId) {
+            document.getElementById('displayOrderId').textContent = orderId;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Editor
+.vscode/
+
+# System
+.DS_Store
+Thumbs.db
+
+# Videos (optional if too large)
+*.mp4
+
+# Logs
+*.log
+
+# Node (if using)
+node_modules/

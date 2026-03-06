@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Users - Luxe Jewels</title>
+    <link rel="stylesheet" href="css/admin-dashboard.css" />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>💎 Luxe Jewels</h1>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Storefront</a></li>
+                <li><a href="admin-dashboard.html">Dashboard</a></li>
+                <li><a href="admin-users.html" class="active">Users</a></li>
+                <li id="logoutItem"><a href="#" id="logoutLink">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="dash-section">
+        <div class="container">
+            <div class="dash-header">
+                <div>
+                    <h2 class="section-title">Admin User Management</h2>
+                    <p class="muted" id="adminWelcome">Manage admins and customers</p>
+                </div>
+                <div class="dash-actions">
+                    <button class="btn btn-primary" id="btnOpenCreateUser">➕ Create User / Admin</button>
+                </div>
+            </div>
+
+            <div id="adminMessage" class="message" style="display: none;"></div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>👥 All Users</h3>
+                </div>
+                <div class="table-wrap">
+                    <table class="dash-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTbody">
+                            <tr><td colspan="4">Loading users...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Create User Modal -->
+    <div class="modal" id="createUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create User / Admin</h2>
+                <button class="close-modal" id="closeCreateUserModal">×</button>
+            </div>
+            <form id="createUserForm">
+                <div class="form-group">
+                    <label for="userName">Full Name *</label>
+                    <input type="text" id="userName" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email *</label>
+                    <input type="email" id="userEmail" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">Password *</label>
+                    <input type="password" id="userPassword" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Role *</label>
+                    <select id="userRole" class="form-control" required>
+                        <option value="USER">Customer</option>
+                        <option value="ADMIN">Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    Create
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/admin-users.js"></script>
+</body>
+</html>
+
