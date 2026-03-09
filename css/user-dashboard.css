@@ -23,6 +23,11 @@ body {
     font-family: var(--font-body);
 }
 
+/* Dashboard must stay clean (no shadows) */
+.navbar {
+    box-shadow: none !important;
+}
+
 /* Dashboard Layout */
 .dashboard-container {
     max-width: 1400px;

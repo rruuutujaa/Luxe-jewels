@@ -12,36 +12,52 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/user-dashboard.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #faf8f3 0%, #f5efe6 50%, #ebe4d8 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 40px auto;
+            width: calc(100% - 80px);
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: none;
+            border: 1px solid rgba(212, 175, 55, 0.18);
+            overflow: hidden;
+            display: flex;
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- Navigation -->
+    <!-- Navigation Bar (same as landing page) -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <a href="index.html" style="text-decoration: none;">
-                    <h1>Luxe Jewels</h1>
-                </a>
+                <h1>💎 Luxe Jewels</h1>
             </div>
-            <ul class="nav-menu">
+            <ul class="nav-menu" id="navMenu">
                 <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
                 <li><a href="products.html">Collections</a></li>
-                <li><a href="products.html?category=rings">Rings</a></li>
-                <li><a href="products.html?category=necklaces">Necklaces</a></li>
-                <li><a href="user-dashboard.html" class="active">My Account</a></li>
+                <li id="dashboardItem" style="display:none;"><a href="user-dashboard.html" class="active" id="dashboardLink">Dashboard</a></li>
+                <li><a href="user-dashboard.html" id="myOrdersLink">My Orders</a></li>
+                <li><a href="login.html" id="loginLink">Login</a></li>
+                <li><a href="register.html" id="registerLink">Register</a></li>
+                <li><a href="cart.html" id="cartLink">Cart <span class="cart-count" id="cartCount">0</span></a></li>
+                <li><a href="wishlist.html" id="wishlistLink">Wishlist <span class="wishlist-count" id="wishlistCount">0</span></a></li>
+                <li id="logoutItem" style="display: none;"><a href="#" id="logoutLink">Logout</a></li>
             </ul>
-            <div class="nav-icons" style="display: flex; gap: 20px; align-items: center;">
-                <a href="wishlist.html" style="color: var(--dark-black); position: relative;">
-                    <i class="far fa-heart" style="font-size: 1.2rem;"></i>
-                    <span class="wishlist-count" id="navWishlistCount">0</span>
-                </a>
-                <a href="cart.html" style="color: var(--dark-black); position: relative;">
-                    <i class="fas fa-shopping-bag" style="font-size: 1.2rem;"></i>
-                    <span class="cart-count" id="navCartCount">0</span>
-                </a>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
     </nav>
@@ -65,7 +81,6 @@
                 </li>
                 <li><a href="#" onclick="switchTab('profile')"><i class="fas fa-user-edit"></i> Profile Settings</a>
                 </li>
-                <li><a href="#" onclick="switchTab('support')"><i class="fas fa-headset"></i> Support</a></li>
                 <li><a href="#" id="logoutBtn" style="color: var(--danger);"><i class="fas fa-sign-out-alt"></i>
                         Logout</a></li>
             </ul>
@@ -339,30 +354,6 @@
                 </div>
             </section>
 
-            <!-- SUPPORT SECTION -->
-            <section id="support" class="dashboard-section">
-                <div class="section-title">Support & Inquiries</div>
-                <div class="content-card" style="max-width: 600px;">
-                    <p style="margin-bottom: 20px;">Have a question? We're here to help.</p>
-                    <form id="supportForm">
-                        <div class="form-group">
-                            <label class="form-label">Type</label>
-                            <select class="form-control" id="supportType">
-                                <option>Order Issue</option>
-                                <option>Product Inquiry</option>
-                                <option>Custom Jewellery Request</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Message</label>
-                            <textarea class="form-control" id="supportMessage" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn-gold">Submit Request</button>
-                    </form>
-                </div>
-            </section>
-
         </main>
     </div>
 
@@ -417,24 +408,9 @@
     </div>
 
     <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
     <script src="js/user-dashboard.js"></script>
-    <script>
-        // Inline tab switching logic (or move to js/user-dashboard.js)
-        function switchTab(tabId) {
-            // Update Menu
-            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
-            const activeLink = document.querySelector(`.sidebar-menu a[onclick="switchTab('${tabId}')"]`);
-            if (activeLink) activeLink.classList.add('active');
-
-            // Update Content
-            document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-
-            // Trigger data load if needed
-            // if(tabId === 'orders') loadOrders(); 
-            // etc... dealt with in user-dashboard.js
-        }
-    </script>
+    <!-- Tab switching is handled by js/user-dashboard.js -->
 </body>
 
 </html>

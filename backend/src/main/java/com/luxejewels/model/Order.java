@@ -18,6 +18,8 @@ public class Order {
     private List<OrderItem> items; // Order items
     private ShippingAddress shippingAddress;
     private BigDecimal subtotal;
+    private String couponCode;
+    private BigDecimal discountAmount;
     private BigDecimal tax;
     private BigDecimal total;
     private String status; // PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED
@@ -34,10 +36,12 @@ public class Order {
     // Inner class for OrderItem
     public static class OrderItem {
         private String productId;
+        private String vendorId;
         private String productName;
         private Integer quantity;
         private BigDecimal price;
         private BigDecimal total;
+        private String itemStatus; // NEW, PROCESSING, SHIPPED, COMPLETED, CANCELLED
 
         // Getters and Setters
         public String getProductId() {
@@ -46,6 +50,14 @@ public class Order {
 
         public void setProductId(String productId) {
             this.productId = productId;
+        }
+
+        public String getVendorId() {
+            return vendorId;
+        }
+
+        public void setVendorId(String vendorId) {
+            this.vendorId = vendorId;
         }
 
         public String getProductName() {
@@ -78,6 +90,14 @@ public class Order {
 
         public void setTotal(BigDecimal total) {
             this.total = total;
+        }
+
+        public String getItemStatus() {
+            return itemStatus;
+        }
+
+        public void setItemStatus(String itemStatus) {
+            this.itemStatus = itemStatus;
         }
     }
 
@@ -197,6 +217,22 @@ public class Order {
 
     public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
+    }
+
+    public BigDecimal getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(BigDecimal discountAmount) {
+        this.discountAmount = discountAmount;
     }
 
     public BigDecimal getTax() {

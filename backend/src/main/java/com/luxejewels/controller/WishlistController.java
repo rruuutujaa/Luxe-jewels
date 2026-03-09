@@ -1,13 +1,15 @@
 package com.luxejewels.controller;
 
 import com.luxejewels.model.WishlistItem;
-import com.luxejewels.security.JwtUtil;
+import com.luxejewels.model.Product;
 import com.luxejewels.service.WishlistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,118 +20,121 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/wishlist")
-@CrossOrigin(origins = "*")
 public class WishlistController {
 
     @Autowired
     private WishlistService wishlistService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     /**
      * Get wishlist items for logged-in user
      * GET /api/wishlist
      */
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getWishlistItems(HttpServletRequest request) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<?> getWishlistItems(HttpServletRequest request) {
         try {
-            String userId = getUserIdFromToken(request);
+            String userId = getUserIdFromSession(request);
             if (userId == null) {
-                response.put("success", false);
-                response.put("message", "Unauthorized");
-                return ResponseEntity.status(401).body(response);
+                return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
             }
 
             List<WishlistItem> items = wishlistService.getWishlistItems(userId);
-            response.put("success", true);
-            response.put("items", items);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(toWishlistDtos(items));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Failed to fetch wishlist items");
-            return ResponseEntity.status(500).body(response);
+            return ResponseEntity.status(500).body(Map.of("message", "Failed to fetch wishlist items"));
         }
     }
 
     /**
      * Add item to wishlist
-     * POST /api/wishlist/add
+     * POST /api/wishlist
+     * POST /api/wishlist/add (backward compatible)
      */
-    @PostMapping("/add")
-    public ResponseEntity<Map<String, Object>> addToWishlist(
+    @PostMapping
+    public ResponseEntity<?> addToWishlistV2(
             @RequestBody Map<String, String> requestBody,
             HttpServletRequest request) {
-        Map<String, Object> response = new HashMap<>();
+        return addToWishlist(requestBody, request);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> addToWishlist(
+            @RequestBody Map<String, String> requestBody,
+            HttpServletRequest request) {
         try {
-            String userId = getUserIdFromToken(request);
+            String userId = getUserIdFromSession(request);
             if (userId == null) {
-                response.put("success", false);
-                response.put("message", "Unauthorized");
-                return ResponseEntity.status(401).body(response);
+                return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
             }
 
             String productId = requestBody.get("productId");
             WishlistItem wishlistItem = wishlistService.addToWishlist(userId, productId);
-            response.put("success", true);
-            response.put("message", "Item added to wishlist");
-            response.put("item", wishlistItem);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(toWishlistDto(wishlistItem));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Failed to add to wishlist: " + e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return ResponseEntity.status(500).body(Map.of("message", "Failed to add to wishlist: " + e.getMessage()));
         }
     }
 
     /**
      * Remove item from wishlist
-     * DELETE /api/wishlist/remove/{wishlistItemId}
+     * DELETE /api/wishlist/{wishlistItemId}
+     * DELETE /api/wishlist/remove/{wishlistItemId} (backward compatible)
      */
-    @DeleteMapping("/remove/{wishlistItemId}")
-    public ResponseEntity<Map<String, Object>> removeFromWishlist(
+    @DeleteMapping("/{wishlistItemId}")
+    public ResponseEntity<?> removeFromWishlistV2(
             @PathVariable String wishlistItemId,
             HttpServletRequest request) {
-        Map<String, Object> response = new HashMap<>();
+        return removeFromWishlist(wishlistItemId, request);
+    }
+
+    @DeleteMapping("/remove/{wishlistItemId}")
+    public ResponseEntity<?> removeFromWishlist(
+            @PathVariable String wishlistItemId,
+            HttpServletRequest request) {
         try {
-            String userId = getUserIdFromToken(request);
+            String userId = getUserIdFromSession(request);
             if (userId == null) {
-                response.put("success", false);
-                response.put("message", "Unauthorized");
-                return ResponseEntity.status(401).body(response);
+                return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
             }
 
             wishlistService.removeFromWishlist(wishlistItemId);
-            response.put("success", true);
-            response.put("message", "Item removed from wishlist");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(Map.of("success", true));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Failed to remove item: " + e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return ResponseEntity.status(500).body(Map.of("message", "Failed to remove item: " + e.getMessage()));
         }
     }
 
     /**
-     * Get user ID from JWT token
+     * Get user ID from HttpSession
      */
-    private String getUserIdFromToken(HttpServletRequest request) {
-        String token = extractToken(request);
-        if (token != null && jwtUtil.validateToken(token)) {
-            return jwtUtil.getUserIdFromToken(token);
-        }
-        return null;
+    private String getUserIdFromSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return null;
+        String userId = (String) session.getAttribute(AuthController.SESSION_USER_ID);
+        return (userId == null || userId.isBlank()) ? null : userId;
     }
 
-    /**
-     * Extract JWT token from request
-     */
-    private String extractToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
+    private List<Map<String, Object>> toWishlistDtos(List<WishlistItem> items) {
+        List<Map<String, Object>> out = new ArrayList<>();
+        if (items == null) return out;
+        for (WishlistItem item : items) {
+            if (item == null) continue;
+            out.add(toWishlistDto(item));
         }
-        return null;
+        return out;
+    }
+
+    private Map<String, Object> toWishlistDto(WishlistItem item) {
+        Product p = item.getProduct();
+        return Map.of(
+                "id", item.getId(),
+                "productId", item.getProductId() != null ? item.getProductId() : (p != null ? p.getId() : null),
+                "product", p == null ? null : Map.of(
+                        "id", p.getId(),
+                        "name", p.getName(),
+                        "price", p.getPrice(),
+                        "imageUrl", p.getImageUrl(),
+                        "category", p.getCategory()
+                )
+        );
     }
 }

@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe Jewels - Executive Dashboard</title>
+    <!-- Google Fonts - Matching index.html -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* ========================================
+           LUXE JEWELS - ADMIN DASHBOARD
+           Luxury Minimalist Theme
+           ======================================== */
+        
+        :root {
+            /* Primary Palette - Luxury Minimalist */
+            --lux-white: #ffffff;
+            --lux-beige: #faf8f3;
+            --lux-beige-light: #f5efe6;
+            --lux-gold: #D4AF37;
+            --lux-gold-light: #e6c35a;
+            --lux-gold-dark: #b8962e;
+            
+            /* Accent Colors - Royal */
+            --royal-emerald: #0e2a4f;
+            --royal-blue: #1a365d;
+            --royal-ruby: #9b2335;
+            
+            /* Text & Backgrounds */
+            --text-dark: #1a1a1a;
+            --text-gray: #666666;
+            --text-light: #8a8680;
+            
+            /* Shadows */
+            --shadow-soft: 0 4px 20px rgba(0,0,0,0.05);
+            --shadow-premium: 0 10px 40px rgba(0,0,0,0.08);
+            --shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.15);
+            
+            /* Borders */
+            --border-gold: 1px solid rgba(212, 175, 55, 0.3);
+            --border-light: 1px solid rgba(0,0,0,0.06);
+            
+            /* Gradients */
+            --gold-gradient: linear-gradient(135deg, #e6c35a 0%, #b8962e 100%);
+            --navy-gradient: linear-gradient(135deg, #0e2a4f 0%, #0a1f3a 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--lux-beige);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+        
+        /* ========================================
+           LAYOUT
+           ======================================== */
+        
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+        
+        /* ========================================
+           SIDEBAR - Premium Boutique Menu
+           ======================================== */
+        
+        .sidebar {
+            background: var(--navy-gradient);
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            width: 260px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-logo {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 1.5rem;
+        }
+        
+        .sidebar-logo h1 {
+            color: var(--lux-gold);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .sidebar-logo span {
+            font-size: 2rem;
+        }
+        
+        .nav-menu {
+            list-style: none;
+            padding: 0 0.75rem;
+            flex: 1;
+        }
+        
+        .nav-item {
+            margin-bottom: 0.25rem;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255,255,255,0.08);
+            color: var(--lux-gold);
+            transform: translateX(6px);
+        }
+        
+        .nav-link.active {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--lux-gold);
+            font-weight: 600;
+            border-left: 3px solid var(--lux-gold);
+        }
+        
+        .nav-link .icon {
+            font-size: 1.25rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        /* ========================================
+           MAIN CONTENT
+           ======================================== */
+        
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+            background: var(--lux-beige);
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem 2rem;
+            background: var(--lux-white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            border: var(--border-gold);
+        }
+        
+        .header-title h1 {
+            font-size: 1.75rem;
+            color: var(--royal-emerald);
+            margin-bottom: 0.25rem;
+        }
+        
+        .header-title p {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .btn-primary {
+            background: var(--gold-gradient);
+            color: white;
+            box-shadow: var(--shadow-gold);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .btn-secondary {
+            background: var(--lux-white);
+            color: var(--royal-emerald);
+            border: var(--border-gold);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--lux-beige-light);
+        }
+        
+        /* ========================================
+           METRICS GRID - Data Cards
+           ======================================== */
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: var(--lux-white);
+            border-radius: 20px;
+            padding: 1.75rem;
+            box-shadow: var(--shadow-soft);
+            border: var(--border-gold);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gold-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-premium);
+        }
+        
+        .metric-card:hover::before {
+            opacity: 1;
+        }
+        
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .metric-label {
+            color: var(--text-light);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .metric-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--lux-gold);
+        }
+        
+        .metric-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--royal-emerald);
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .trend-up {
+            color: #10b981;
+        }
+        
+        .trend-down {
+            color: var(--royal-ruby);
+        }
+        
+        /* ========================================
+           CHARTS GRID
+           ======================================== */
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-card {
+            background: var(--lux-white);
+            border-radius: 20px;
+            padding: 1.75rem;
+            box-shadow: var(--shadow-soft);
+            border: var(--border-gold);
+            transition: all 0.4s ease;
+        }
+        
+        .chart-card:hover {
+            box-shadow: var(--shadow-premium);
+        }
+        
+        .chart-card.large {
+            grid-column: span 2;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-title {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .chart-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        
+        .chart-body {
+            height: 280px;
+        }
+        
+        /* ========================================
+           DATA TABLE - Clean & Sophisticated
+           ======================================== */
+        
+        .data-table-card {
+            background: var(--lux-white);
+            border-radius: 20px;
+            padding: 1.75rem;
+            box-shadow: var(--shadow-soft);
+            border: var(--border-gold);
+            margin-bottom: 2rem;
+        }
+        
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table thead th {
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 2px solid var(--lux-beige-light);
+        }
+        
+        .data-table tbody td {
+            padding: 1rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--lux-beige-light);
+        }
+        
+        .data-table tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        .data-table tbody tr:hover {
+            background: var(--lux-beige);
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 0.375rem 0.875rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .status-paid {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+        
+        .status-cancelled {
+            background: rgba(155, 35, 53, 0.1);
+            color: var(--royal-ruby);
+        }
+        
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        
+        @media (max-width: 1400px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-card.large {
+                grid-column: span 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        /* ========================================
+           ANIMATIONS
+           ======================================== */
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--lux-beige-light);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--lux-gold);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--lux-gold-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <h1><span>💎</span> Luxe Jewels</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <span class="icon">📊</span>
+                            Overview
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="icon">📦</span>
+                            Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="icon">💍</span>
+                            Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="icon">👥</span>
+                            Customers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="icon">⭐</span>
+                            Wishlist
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="icon">🛒</span>
+                            Cart
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <span class="icon">🏠</span>
+                            Storefront
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header animate-fade">
+                <div class="header-title">
+                    <h1>Executive Dashboard</h1>
+                    <p>Real-time business intelligence</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">
+                        <span>🔄</span> Refresh
+                    </button>
+                    <button class="btn btn-primary">
+                        <span>➕</span> Add Product
+                    </button>
+                </div>
+            </header>
+
+            <!-- Metrics Grid -->
+            <section class="metrics-grid animate-fade" style="animation-delay: 0.1s;">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Total Revenue</span>
+                        <div class="metric-icon">💰</div>
+                    <div class="metric-value" id="statRevenue">₹0</div>
+                    <div class="metric-trend trend-up">
+                        <span>▲</span> 12.5% <span style="color: var(--text-light)">vs last month</span>
+                    </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Total Orders</span>
+                        <div class="metric-icon">📦</div>
+                    <div class="metric-value" id="statOrders">0</div>
+                    <div class="metric-trend trend-up">
+                        <span>▲</span> 8.2% <span style="color: var(--text-light)">vs last month</span>
+                    </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Total Customers</span>
+                        <div class="metric-icon">👥</div>
+                    <div class="metric-value" id="statUsers">0</div>
+                    <div class="metric-trend trend-up">
+                        <span>▲</span> 15.3% <span style="color: var(--text-light)">vs last month</span>
+                    </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Total Products</span>
+                        <div class="metric-icon">💎</div>
+                    <div class="metric-value" id="statProducts">0</div>
+                    <div class="metric-trend trend-up">
+                        <span>▲</span> 5.1% <span style="color: var(--text-light)">vs last month</span>
+                    </div>
+            </section>
+
+            <!-- Charts Grid -->
+            <section class="charts-grid animate-fade" style="animation-delay: 0.2s;">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Revenue Trend</h3>
+                            <p class="chart-subtitle">Monthly performance</p>
+                        </div>
+                    <div class="chart-body">
+                        <canvas id="chartRevenue"></canvas>
+                    </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Customer Growth</h3>
+                            <p class="chart-subtitle">Monthly acquisitions</p>
+                        </div>
+                    <div class="chart-body">
+                        <canvas id="chartCustomers"></canvas>
+                    </div>
+
+                <div class="chart-card large">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Top Products</h3>
+                            <p class="chart-subtitle">Best sellers this month</p>
+                        </div>
+                    <div class="chart-body">
+                        <canvas id="chartTopProducts"></canvas>
+                    </div>
+            </section>
+
+            <!-- Recent Orders Table -->
+            <section class="data-table-card animate-fade" style="animation-delay: 0.3s;">
+                <div class="table-header">
+                    <div>
+                        <h3 class="chart-title">Recent Orders</h3>
+                        <p class="chart-subtitle">Latest transactions</p>
+                    </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTbody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-light);">
+                                    Loading orders...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/admin-analytics.js"></script>
+    <script>
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load analytics data
+            loadDashboardData();
+            
+            // Initialize charts
+            initCharts();
+        });
+
+        async function loadDashboardData() {
+            try {
+                const stats = await fetchAdminStats();
+                if (stats) {
+                    document.getElementById('statRevenue').textContent = '₹' + (stats.totalRevenue || 0).toLocaleString();
+                    document.getElementById('statOrders').textContent = stats.totalOrders || 0;
+                    document.getElementById('statUsers').textContent = stats.totalUsers || 0;
+                    document.getElementById('statProducts').textContent = stats.totalProducts || 0;
+                }
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        function initCharts() {
+            // Revenue Chart
+            const revenueCtx = document.getElementById('chartRevenue').getContext('2d');
+            new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [120000, 190000, 150000, 250000, 220000, 300000],
+                        borderColor: '#D4AF37',
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#D4AF37',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // Customer Growth Chart
+            const customerCtx = document.getElementById('chartCustomers').getContext('2d');
+            new Chart(customerCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'New Customers',
+                        data: [45, 59, 80, 81, 56, 95],
+                        backgroundColor: 'rgba(14, 42, 79, 0.8)',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // Top Products Chart
+            const productsCtx = document.getElementById('chartTopProducts').getContext('2d');
+            new Chart(productsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Gold Necklace', 'Diamond Ring', 'Gold Earrings', 'Pearl Bracelet', 'Wedding Set'],
+                    datasets: [{
+                        label: 'Units Sold',
+                        data: [120, 95, 87, 65, 45],
+                        backgroundColor: [
+                            'rgba(212, 175, 55, 0.9)',
+                            'rgba(212, 175, 55, 0.75)',
+                            'rgba(212, 175, 55, 0.6)',
+                            'rgba(212, 175, 55, 0.45)',
+                            'rgba(212, 175, 55, 0.3)'
+                        ],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        y: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Load recent orders
+        async function loadRecentOrders() {
+            try {
+                const orders = await fetchAdminRecentOrders(10);
+                const tbody = document.getElementById('ordersTbody');
+                
+                if (orders && orders.length > 0) {
+                    tbody.innerHTML = orders.map(order => `
+                        <tr>
+                            <td><strong>#${order.id || 'N/A'}</strong></td>
+                            <td>${order.userName || 'Guest'}</td>
+                            <td>₹${(order.total || 0).toLocaleString()}</td>
+                            <td>${order.paymentStatus || 'N/A'}</td>
+                            <td><span class="status-badge status-${(order.paymentStatus || '').toLowerCase()}">${order.paymentStatus || 'Pending'}</span></td>
+                            <td>${order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-light);">
+                                No orders found
+                            </td>
+                        </tr>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        // Load recent orders on page load
+        loadRecentOrders();
+    </script>
+</body>
+</html>
+</parameter>
+</create_file>

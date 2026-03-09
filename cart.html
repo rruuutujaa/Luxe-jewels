@@ -16,6 +16,9 @@
             <ul class="nav-menu" id="navMenu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="products.html">Shop</a></li>
+                <li><a href="products.html">Collections</a></li>
+                <li id="dashboardItem" style="display:none;"><a href="user-dashboard.html" id="dashboardLink">Dashboard</a></li>
+                <li><a href="user-dashboard.html" id="myOrdersLink">My Orders</a></li>
                 <li><a href="login.html" id="loginLink">Login</a></li>
                 <li><a href="register.html" id="registerLink">Register</a></li>
                 <li><a href="cart.html" class="active" id="cartLink">Cart <span class="cart-count" id="cartCount">0</span></a></li>
@@ -77,20 +80,18 @@
 
         // Load cart items from backend
         async function loadCart() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                document.getElementById('cartItems').innerHTML = 
-                    '<p class="error-message">Please <a href="login.html">login</a> to view your cart.</p>';
-                document.getElementById('checkoutBtn').style.display = 'none';
-                return;
-            }
-
             try {
                 const cartItems = await fetchCartItems();
                 displayCartItems(cartItems);
                 updateCartSummary(cartItems);
             } catch (error) {
                 console.error('Error loading cart:', error);
+                if (error && error.status === 401) {
+                    document.getElementById('cartItems').innerHTML =
+                        '<p class="error-message">Please <a href="login.html">login</a> to view your cart.</p>';
+                    document.getElementById('checkoutBtn').style.display = 'none';
+                    return;
+                }
                 document.getElementById('cartItems').innerHTML = 
                     '<p class="error-message">Failed to load cart. Please try again.</p>';
             }
@@ -192,8 +193,9 @@ function displayCartItems(items) {
             try {
                 await updateCartItemQuantity(cartItemId, newQuantity);
                 showMessage('Cart updated successfully!', 'success');
-                loadCart();
-                updateCartCount();
+                if (typeof dispatchDataChanged === 'function') dispatchDataChanged();
+                await loadCart();
+                await updateCartCount();
             } catch (error) {
                 console.error('Error updating quantity:', error);
                 showMessage('Failed to update cart. Please try again.', 'error');
@@ -205,8 +207,9 @@ function displayCartItems(items) {
             try {
                 await removeCartItem(cartItemId);
                 showMessage('Item removed from cart', 'success');
-                loadCart();
-                updateCartCount();
+                if (typeof dispatchDataChanged === 'function') dispatchDataChanged();
+                await loadCart();
+                await updateCartCount();
             } catch (error) {
                 console.error('Error removing item:', error);
                 showMessage('Failed to remove item. Please try again.', 'error');

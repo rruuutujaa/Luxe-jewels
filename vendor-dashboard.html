@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard | Luxe Jewels</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/vendor-dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Global Navbar (luxury theme) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>💎 Luxe Jewels</h1>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="products.html">Collections</a></li>
+                <li id="dashboardItem" style="display:none;"><a href="vendor-dashboard.html" class="active" id="dashboardLink">Vendor Dashboard</a></li>
+                <li><a href="user-dashboard.html" id="myOrdersLink">My Orders</a></li>
+                <li><a href="cart.html" id="cartLink">Cart <span class="cart-count" id="cartCount">0</span></a></li>
+                <li><a href="wishlist.html" id="wishlistLink">Wishlist <span class="wishlist-count" id="wishlistCount">0</span></a></li>
+                <li id="logoutItem" style="display:none;"><a href="#" id="logoutLink">Logout</a></li>
+                <li><a href="login.html" id="loginLink">Login</a></li>
+                <li><a href="register.html" id="registerLink">Register</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="vendor-shell">
+        <!-- Sidebar -->
+        <aside class="vendor-sidebar">
+            <div class="vendor-summary">
+                <div class="vendor-avatar" id="vendorAvatar">V</div>
+                <div class="vendor-meta">
+                    <div class="vendor-name" id="vendorName">Loading...</div>
+                    <div class="vendor-company" id="vendorCompany">...</div>
+                </div>
+            </div>
+
+            <ul class="vendor-menu">
+                <li><a href="#" class="active" onclick="vendorSwitch('vd-overview')"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="#" onclick="vendorSwitch('vd-products')"><i class="fas fa-gem"></i> My Products</a></li>
+                <li><a href="#" onclick="vendorSwitch('vd-add')"><i class="fas fa-plus-circle"></i> Add Product</a></li>
+                <li><a href="#" onclick="vendorSwitch('vd-inventory')"><i class="fas fa-boxes-stacked"></i> Inventory</a></li>
+                <li><a href="#" onclick="vendorSwitch('vd-orders')"><i class="fas fa-box-open"></i> Orders</a></li>
+                <li><a href="#" onclick="vendorSwitch('vd-sales')"><i class="fas fa-signal"></i> Sales Analytics</a></li>
+                <li><a href="#" onclick="vendorSwitch('vd-coupons')"><i class="fas fa-tags"></i> Coupons & Offers</a></li>
+                <li><a href="#" onclick="vendorSwitch('vd-reviews')"><i class="fas fa-star"></i> Customer Reviews</a></li>
+                <li><a href="#" onclick="vendorSwitch('vd-notifications')"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="#" onclick="vendorSwitch('vd-profile')"><i class="fas fa-user-gear"></i> Profile Settings</a></li>
+                <li><a href="#" onclick="vendorSwitch('vd-support')"><i class="fas fa-headset"></i> Support</a></li>
+                <li><a href="#" id="vendorLogoutBtn" style="color: #b04a3f;"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Content -->
+        <main class="vendor-content">
+            <!-- OVERVIEW -->
+            <section class="vd-section active" id="vd-overview">
+                <div class="vd-header">
+                    <div>
+                        <h2 class="vd-title">Vendor Overview</h2>
+                        <p class="vd-subtitle">Live performance & operational insights.</p>
+                    </div>
+                    <div class="vd-header-actions">
+                        <a class="vd-btn vd-btn-gold" href="#" onclick="vendorSwitch('vd-add')">Add Product</a>
+                        <a class="vd-btn vd-btn-outline" href="#" onclick="vendorSwitch('vd-orders')">View Orders</a>
+                    </div>
+                </div>
+
+                <div class="vd-stats">
+                    <div class="vd-stat">
+                        <div class="vd-stat-top">
+                            <span class="vd-stat-label">Total Products</span>
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <div class="vd-stat-value" id="statTotalProducts">0</div>
+                    </div>
+                    <div class="vd-stat">
+                        <div class="vd-stat-top">
+                            <span class="vd-stat-label">Total Orders</span>
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="vd-stat-value" id="statTotalOrders">0</div>
+                    </div>
+                    <div class="vd-stat">
+                        <div class="vd-stat-top">
+                            <span class="vd-stat-label">Total Revenue</span>
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="vd-stat-value" id="statTotalRevenue">₹0.00</div>
+                    </div>
+                    <div class="vd-stat">
+                        <div class="vd-stat-top">
+                            <span class="vd-stat-label">Pending Orders</span>
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                        <div class="vd-stat-value" id="statPendingOrders">0</div>
+                    </div>
+                    <div class="vd-stat">
+                        <div class="vd-stat-top">
+                            <span class="vd-stat-label">Low Stock Alerts</span>
+                            <i class="fas fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="vd-stat-value" id="statLowStock">0</div>
+                    </div>
+                    <div class="vd-stat">
+                        <div class="vd-stat-top">
+                            <span class="vd-stat-label">Top Selling</span>
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="vd-stat-value" id="statTopSelling">—</div>
+                    </div>
+                </div>
+
+                <div class="vd-grid-2">
+                    <div class="vd-card">
+                        <div class="vd-card-header">
+                            <div class="vd-card-title">Monthly Revenue</div>
+                            <div class="vd-card-meta">Last 12 months</div>
+                        </div>
+                        <canvas id="revenueChart" height="160"></canvas>
+                    </div>
+                    <div class="vd-card">
+                        <div class="vd-card-header">
+                            <div class="vd-card-title">Top Products</div>
+                            <div class="vd-card-meta">By revenue</div>
+                        </div>
+                        <div id="topProductsList" class="vd-list">
+                            <div class="vd-empty">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PRODUCTS -->
+            <section class="vd-section" id="vd-products">
+                <div class="vd-header">
+                    <div>
+                        <h2 class="vd-title">My Products</h2>
+                        <p class="vd-subtitle">Manage your catalog. Changes appear in the shop instantly.</p>
+                    </div>
+                    <div class="vd-header-actions">
+                        <a class="vd-btn vd-btn-gold" href="#" onclick="vendorSwitch('vd-add')">Add Product</a>
+                    </div>
+                </div>
+
+                <div class="vd-card">
+                    <div class="vd-table-wrap">
+                        <table class="vd-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>SKU</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTbody">
+                                <tr><td colspan="6" class="vd-td-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ADD / EDIT PRODUCT -->
+            <section class="vd-section" id="vd-add">
+                <div class="vd-header">
+                    <div>
+                        <h2 class="vd-title" id="productFormTitle">Add Product</h2>
+                        <p class="vd-subtitle">Create a new product listing.</p>
+                    </div>
+                </div>
+
+                <div class="vd-card">
+                    <form id="productForm" class="vd-form">
+                        <input type="hidden" id="productId">
+                        <div class="vd-form-grid">
+                            <div class="vd-field">
+                                <label>Product Name</label>
+                                <input id="pName" required>
+                            </div>
+                            <div class="vd-field">
+                                <label>SKU Code</label>
+                                <input id="pSku" placeholder="e.g. LJ-VND-001">
+                            </div>
+                            <div class="vd-field">
+                                <label>Category</label>
+                                <input id="pCategory" placeholder="Rings / Necklaces / Earrings">
+                            </div>
+                            <div class="vd-field">
+                                <label>Sub Category</label>
+                                <input id="pSubCategory" placeholder="e.g. Bridal">
+                            </div>
+                            <div class="vd-field">
+                                <label>Price (₹)</label>
+                                <input id="pPrice" type="number" step="0.01" required>
+                            </div>
+                            <div class="vd-field">
+                                <label>Discount Price (₹)</label>
+                                <input id="pDiscountPrice" type="number" step="0.01">
+                            </div>
+                            <div class="vd-field">
+                                <label>Metal Type</label>
+                                <input id="pMetalType" placeholder="Gold / Platinum / Silver">
+                            </div>
+                            <div class="vd-field">
+                                <label>Purity</label>
+                                <input id="pPurity" placeholder="18K / 22K">
+                            </div>
+                            <div class="vd-field">
+                                <label>Weight (g)</label>
+                                <input id="pWeight" type="number" step="0.01">
+                            </div>
+                            <div class="vd-field">
+                                <label>Size</label>
+                                <input id="pSize" placeholder="Ring size / length">
+                            </div>
+                            <div class="vd-field">
+                                <label>Making Charges (₹)</label>
+                                <input id="pMakingCharges" type="number" step="0.01">
+                            </div>
+                            <div class="vd-field">
+                                <label>Stock Quantity</label>
+                                <input id="pStock" type="number" min="0" required>
+                            </div>
+                            <div class="vd-field vd-span-2">
+                                <label>Diamond Details</label>
+                                <input id="pDiamondDetails" placeholder="Cut/Clarity/Carat etc.">
+                            </div>
+                            <div class="vd-field vd-span-2">
+                                <label>Description</label>
+                                <textarea id="pDescription" rows="4"></textarea>
+                            </div>
+                            <div class="vd-field vd-span-2">
+                                <label>Product Images (comma-separated URLs)</label>
+                                <input id="pImages" placeholder="https://... , https://...">
+                            </div>
+                            <div class="vd-field vd-span-2">
+                                <label>Product Video URL</label>
+                                <input id="pVideoUrl" placeholder="https://...">
+                            </div>
+                            <div class="vd-field vd-span-2">
+                                <label>Tags (comma-separated)</label>
+                                <input id="pTags" placeholder="bridal, diamond, new">
+                            </div>
+                            <div class="vd-field">
+                                <label>Featured Product</label>
+                                <select id="pFeatured">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+                                </select>
+                            </div>
+                            <div class="vd-field">
+                                <label>Enabled</label>
+                                <select id="pIsActive">
+                                    <option value="true">Enabled</option>
+                                    <option value="false">Disabled</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="vd-form-actions">
+                            <button class="vd-btn vd-btn-gold" type="submit">Save Product</button>
+                            <button class="vd-btn vd-btn-outline" type="button" onclick="vendorResetProductForm()">Reset</button>
+                        </div>
+                        <div id="productFormMsg" class="vd-msg"></div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- INVENTORY -->
+            <section class="vd-section" id="vd-inventory">
+                <div class="vd-header">
+                    <div>
+                        <h2 class="vd-title">Inventory</h2>
+                        <p class="vd-subtitle">Update stock quantities. Shop availability updates instantly.</p>
+                    </div>
+                </div>
+                <div class="vd-card">
+                    <div class="vd-table-wrap">
+                        <table class="vd-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>SKU</th>
+                                    <th>Stock</th>
+                                    <th>Alert</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTbody">
+                                <tr><td colspan="5" class="vd-td-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ORDERS -->
+            <section class="vd-section" id="vd-orders">
+                <div class="vd-header">
+                    <div>
+                        <h2 class="vd-title">Orders</h2>
+                        <p class="vd-subtitle">Only orders containing your products.</p>
+                    </div>
+                </div>
+                <div class="vd-card">
+                    <div class="vd-table-wrap">
+                        <table class="vd-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Product</th>
+                                    <th>Customer</th>
+                                    <th>Qty</th>
+                                    <th>Total</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Update</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTbody">
+                                <tr><td colspan="8" class="vd-td-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SALES -->
+            <section class="vd-section" id="vd-sales">
+                <div class="vd-header">
+                    <div>
+                        <h2 class="vd-title">Sales Analytics</h2>
+                        <p class="vd-subtitle">Performance snapshots for your catalog.</p>
+                    </div>
+                </div>
+                <div class="vd-card">
+                    <div class="vd-grid-2">
+                        <div>
+                            <div class="vd-card-title">Revenue by Month</div>
+                            <canvas id="salesRevenueChart" height="160"></canvas>
+                        </div>
+                        <div>
+                            <div class="vd-card-title">Top Products</div>
+                            <canvas id="salesTopChart" height="160"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- COUPONS (UI placeholder; backend wiring can be added) -->
+            <section class="vd-section" id="vd-coupons">
+                <div class="vd-header">
+                    <div>
+                        <h2 class="vd-title">Coupons & Offers</h2>
+                        <p class="vd-subtitle">Create promotions for checkout.</p>
+                    </div>
+                </div>
+                <div class="vd-card">
+                    <div class="vd-grid-2" style="grid-template-columns: 1.1fr .9fr;">
+                        <div>
+                            <div class="vd-card-title" style="margin-bottom:10px;">My Coupons</div>
+                            <div class="vd-table-wrap">
+                                <table class="vd-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Type</th>
+                                            <th>Value</th>
+                                            <th>Active</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="couponsTbody">
+                                        <tr><td colspan="5" class="vd-td-center">Loading...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="vd-card-title" style="margin-bottom:10px;" id="couponFormTitle">Create Coupon</div>
+                            <form id="couponForm" class="vd-form">
+                                <input type="hidden" id="couponId">
+                                <div class="vd-form-grid" style="grid-template-columns: 1fr 1fr;">
+                                    <div class="vd-field vd-span-2">
+                                        <label>Code</label>
+                                        <input id="cCode" placeholder="LUXE10" required>
+                                    </div>
+                                    <div class="vd-field">
+                                        <label>Type</label>
+                                        <select id="cType">
+                                            <option value="PERCENT">Percent</option>
+                                            <option value="FIXED">Fixed</option>
+                                        </select>
+                                    </div>
+                                    <div class="vd-field">
+                                        <label>Value</label>
+                                        <input id="cValue" type="number" step="0.01" required>
+                                    </div>
+                                    <div class="vd-field vd-span-2">
+                                        <label>Category (optional)</label>
+                                        <input id="cCategory" placeholder="Rings">
+                                    </div>
+                                    <div class="vd-field vd-span-2">
+                                        <label>Product ID (optional)</label>
+                                        <input id="cProductId" placeholder="Mongo product id">
+                                    </div>
+                                    <div class="vd-field">
+                                        <label>Active</label>
+                                        <select id="cActive">
+                                            <option value="true">Yes</option>
+                                            <option value="false">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="vd-form-actions">
+                                    <button class="vd-btn vd-btn-gold" type="submit">Save</button>
+                                    <button class="vd-btn vd-btn-outline" type="button" onclick="vendorResetCouponForm()">Reset</button>
+                                </div>
+                                <div id="couponMsg" class="vd-msg"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REVIEWS -->
+            <section class="vd-section" id="vd-reviews">
+                <div class="vd-header">
+                    <div>
+                        <h2 class="vd-title">Customer Reviews</h2>
+                        <p class="vd-subtitle">View ratings and respond.</p>
+                    </div>
+                </div>
+                <div class="vd-card">
+                    <div class="vd-table-wrap">
+                        <table class="vd-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Rating</th>
+                                    <th>Comment</th>
+                                    <th>Reply</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reviewsTbody">
+                                <tr><td colspan="5" class="vd-td-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NOTIFICATIONS -->
+            <section class="vd-section" id="vd-notifications">
+                <div class="vd-header">
+                    <div>
+                        <h2 class="vd-title">Notifications</h2>
+                        <p class="vd-subtitle">Operational alerts.</p>
+                    </div>
+                </div>
+                <div class="vd-card">
+                    <div class="vd-card-header" style="border-bottom:none;margin-bottom:8px;">
+                        <div class="vd-card-title">Latest</div>
+                        <div class="vd-card-meta">Unread: <span id="notifUnread">0</span></div>
+                    </div>
+                    <div class="vd-table-wrap">
+                        <table class="vd-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Title</th>
+                                    <th>Message</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="notifTbody">
+                                <tr><td colspan="5" class="vd-td-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROFILE -->
+            <section class="vd-section" id="vd-profile">
+                <div class="vd-header">
+                    <div>
+                        <h2 class="vd-title">Profile Settings</h2>
+                        <p class="vd-subtitle">Vendor details.</p>
+                    </div>
+                </div>
+                <div class="vd-card">
+                    <form id="vendorProfileForm" class="vd-form">
+                        <div class="vd-form-grid">
+                            <div class="vd-field">
+                                <label>Vendor Name</label>
+                                <input id="vpVendorName" required>
+                            </div>
+                            <div class="vd-field">
+                                <label>Company Name</label>
+                                <input id="vpCompanyName">
+                            </div>
+                            <div class="vd-field">
+                                <label>Email</label>
+                                <input id="vpEmail" disabled>
+                            </div>
+                            <div class="vd-field">
+                                <label>Phone</label>
+                                <input id="vpPhone">
+                            </div>
+                            <div class="vd-field vd-span-2">
+                                <label>Business Address</label>
+                                <textarea id="vpBusinessAddress" rows="3"></textarea>
+                            </div>
+                            <div class="vd-field vd-span-2">
+                                <label>Bank Details</label>
+                                <textarea id="vpBankDetails" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="vd-form-actions">
+                            <button class="vd-btn vd-btn-gold" type="submit">Save</button>
+                        </div>
+                        <div id="vendorProfileMsg" class="vd-msg"></div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- SUPPORT -->
+            <section class="vd-section" id="vd-support">
+                <div class="vd-header">
+                    <div>
+                        <h2 class="vd-title">Support</h2>
+                        <p class="vd-subtitle">Contact admin / raise a ticket.</p>
+                    </div>
+                </div>
+                <div class="vd-card">
+                    <div class="vd-grid-2" style="grid-template-columns: 1fr 1fr;">
+                        <div>
+                            <div class="vd-card-title" style="margin-bottom:10px;">Raise Ticket</div>
+                            <form id="supportForm" class="vd-form">
+                                <div class="vd-field">
+                                    <label>Subject</label>
+                                    <input id="stSubject" required>
+                                </div>
+                                <div class="vd-field">
+                                    <label>Message</label>
+                                    <textarea id="stMessage" rows="5" required></textarea>
+                                </div>
+                                <div class="vd-form-actions">
+                                    <button class="vd-btn vd-btn-gold" type="submit">Submit</button>
+                                </div>
+                                <div id="supportMsg" class="vd-msg"></div>
+                            </form>
+                        </div>
+                        <div>
+                            <div class="vd-card-title" style="margin-bottom:10px;">My Tickets</div>
+                            <div class="vd-table-wrap">
+                                <table class="vd-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Subject</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ticketsTbody">
+                                        <tr><td colspan="4" class="vd-td-center">Loading...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/vendor-dashboard.js"></script>
+</body>
+</html>
+

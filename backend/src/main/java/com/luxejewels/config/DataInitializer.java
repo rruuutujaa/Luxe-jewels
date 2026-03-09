@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 /**
  * Data Initializer
@@ -31,6 +32,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         seedAdminUser();
+        String vendorId = seedVendorUser();
         // Check if products already exist
         if (productRepository.count() > 0) {
             return; // Skip initialization if products exist
@@ -55,6 +57,7 @@ public class DataInitializer implements CommandLineRunner {
             product.setImageUrl("https://via.placeholder.com/300x300?text=" + product.getName().replace(" ", "+"));
             product.setStock(10);
             product.setIsActive(true);
+            product.setVendorId(vendorId);
             productRepository.save(product);
         }
 
@@ -76,5 +79,26 @@ public class DataInitializer implements CommandLineRunner {
         admin.setRole("ADMIN");
         userRepository.save(admin);
         System.out.println("Admin user created: " + adminEmail);
+    }
+
+    /**
+     * One-time creation of a vendor user for testing the supplier panel.
+     * Returns vendor userId.
+     */
+    private String seedVendorUser() {
+        String vendorEmail = "vendor@luxejewels.com";
+        Optional<User> existing = userRepository.findByEmail(vendorEmail);
+        if (existing.isPresent()) {
+            return existing.get().getId();
+        }
+        User vendor = new User();
+        vendor.setName("Vendor");
+        vendor.setCompanyName("Luxe Supplier Co.");
+        vendor.setEmail(vendorEmail);
+        vendor.setPassword(passwordEncoder.encode("vendor123"));
+        vendor.setRole("VENDOR");
+        userRepository.save(vendor);
+        System.out.println("Vendor user created: " + vendorEmail);
+        return vendor.getId();
     }
 }

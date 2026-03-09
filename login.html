@@ -205,6 +205,9 @@
             <ul class="nav-menu" id="navMenu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="products.html">Shop</a></li>
+                <li><a href="products.html">Collections</a></li>
+                <li id="dashboardItem" style="display:none;"><a href="user-dashboard.html" id="dashboardLink">Dashboard</a></li>
+                <li><a href="user-dashboard.html" id="myOrdersLink">My Orders</a></li>
                 <li><a href="login.html" class="active">Login</a></li>
                 <li><a href="register.html">Register</a></li>
                 <li><a href="cart.html" id="cartLink">Cart <span class="cart-count" id="cartCount">0</span></a></li>
@@ -294,7 +297,7 @@
                     messageDiv.textContent = 'Login successful! Redirecting...';
 
                     setTimeout(() => {
-                        const user = response.user || JSON.parse(localStorage.getItem('user') || '{}');
+                        const user = response.user || {};
                         const role = String(user.role || '').toUpperCase();
                         if (role === 'ADMIN') {
                             window.location.href = 'admin-dashboard.html';

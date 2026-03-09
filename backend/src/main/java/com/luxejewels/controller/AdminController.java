@@ -7,9 +7,9 @@ import com.luxejewels.repository.OrderRepository;
 import com.luxejewels.repository.ProductRepository;
 import com.luxejewels.repository.UserRepository;
 import com.luxejewels.service.UserService;
-import com.luxejewels.security.JwtUtil;
 import com.luxejewels.service.AdminAnalyticsService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +27,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = "*")
 public class AdminController {
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     @Autowired
     private UserRepository userRepository;
@@ -47,20 +43,15 @@ public class AdminController {
 
     @Autowired
     private AdminAnalyticsService adminAnalyticsService;
+
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> stats(HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
-            }
-            if (!isAdmin(token)) {
-                resp.put("success", false);
-                resp.put("message", "Forbidden");
-                return ResponseEntity.status(403).body(resp);
             }
 
             long totalUsers = userRepository.count();
@@ -100,16 +91,10 @@ public class AdminController {
     public ResponseEntity<Map<String, Object>> orders(HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
-            }
-            if (!isAdmin(token)) {
-                resp.put("success", false);
-                resp.put("message", "Forbidden");
-                return ResponseEntity.status(403).body(resp);
             }
 
             List<Order> orders = orderRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -121,7 +106,8 @@ public class AdminController {
                 String userName = null;
                 if (o.getUserId() != null) {
                     User u = userRepository.findById(o.getUserId()).orElse(null);
-                    if (u != null) userName = u.getName();
+                    if (u != null)
+                        userName = u.getName();
                 }
                 m.put("userName", userName != null && !userName.isBlank() ? userName : "Unknown");
                 m.put("items", o.getItems());
@@ -147,20 +133,13 @@ public class AdminController {
     public ResponseEntity<Map<String, Object>> updateOrderStatus(
             @PathVariable String orderId,
             @RequestBody Map<String, String> body,
-            HttpServletRequest request
-    ) {
+            HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
-            }
-            if (!isAdmin(token)) {
-                resp.put("success", false);
-                resp.put("message", "Forbidden");
-                return ResponseEntity.status(403).body(resp);
             }
             String status = body.get("status");
             if (status == null || status.isBlank()) {
@@ -187,28 +166,21 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<Map<String, Object>> users(@RequestParam(value = "query", required = false) String query, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> users(@RequestParam(value = "query", required = false) String query,
+            HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
-            }
-            if (!isAdmin(token)) {
-                resp.put("success", false);
-                resp.put("message", "Forbidden");
-                return ResponseEntity.status(403).body(resp);
             }
 
             List<User> users = userRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
             if (query != null && !query.isBlank()) {
                 String q = query.trim().toLowerCase();
-                users = users.stream().filter(u ->
-                        (u.getEmail() != null && u.getEmail().toLowerCase().contains(q)) ||
-                        (u.getName() != null && u.getName().toLowerCase().contains(q))
-                ).collect(Collectors.toList());
+                users = users.stream().filter(u -> (u.getEmail() != null && u.getEmail().toLowerCase().contains(q)) ||
+                        (u.getName() != null && u.getName().toLowerCase().contains(q))).collect(Collectors.toList());
             }
             // Never expose password hashes
             List<Map<String, Object>> safeUsers = users.stream().map(u -> Map.<String, Object>of(
@@ -217,8 +189,7 @@ public class AdminController {
                     "email", u.getEmail(),
                     "role", u.getRole(),
                     "disabled", u.getDisabled(),
-                    "createdAt", u.getCreatedAt()
-            )).collect(Collectors.toList());
+                    "createdAt", u.getCreatedAt())).collect(Collectors.toList());
 
             resp.put("success", true);
             resp.put("users", safeUsers);
@@ -231,11 +202,11 @@ public class AdminController {
     }
 
     @PutMapping("/users/{id}/role")
-    public ResponseEntity<Map<String, Object>> changeUserRole(@PathVariable String id, @RequestBody Map<String, String> body, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> changeUserRole(@PathVariable String id,
+            @RequestBody Map<String, String> body, HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token) || !isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
@@ -264,11 +235,11 @@ public class AdminController {
     }
 
     @PutMapping("/users/{id}/disable")
-    public ResponseEntity<Map<String, Object>> disableUser(@PathVariable String id, @RequestBody Map<String, Object> body, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> disableUser(@PathVariable String id,
+            @RequestBody Map<String, Object> body, HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token) || !isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
@@ -297,16 +268,10 @@ public class AdminController {
     public ResponseEntity<Map<String, Object>> lowStock(HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
-            }
-            if (!isAdmin(token)) {
-                resp.put("success", false);
-                resp.put("message", "Forbidden");
-                return ResponseEntity.status(403).body(resp);
             }
             int threshold = 5;
             List<Product> products = productRepository.findByStockLessThanAndIsActive(threshold, true);
@@ -325,16 +290,10 @@ public class AdminController {
     public ResponseEntity<Map<String, Object>> revenue(HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
-            }
-            if (!isAdmin(token)) {
-                resp.put("success", false);
-                resp.put("message", "Forbidden");
-                return ResponseEntity.status(403).body(resp);
             }
 
             List<Order> orders = orderRepository.findAll();
@@ -347,7 +306,8 @@ public class AdminController {
             // Revenue per day (simple aggregation)
             Map<LocalDate, BigDecimal> revenuePerDay = new TreeMap<>();
             for (Order o : orders) {
-                if (!"PAID".equalsIgnoreCase(o.getPaymentStatus()) || o.getCreatedAt() == null) continue;
+                if (!"PAID".equalsIgnoreCase(o.getPaymentStatus()) || o.getCreatedAt() == null)
+                    continue;
                 LocalDate day = o.getCreatedAt().toLocalDate();
                 revenuePerDay.put(day, revenuePerDay.getOrDefault(day, BigDecimal.ZERO).add(o.getTotal()));
             }
@@ -371,16 +331,10 @@ public class AdminController {
     public ResponseEntity<Map<String, Object>> analytics(HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
-            }
-            if (!isAdmin(token)) {
-                resp.put("success", false);
-                resp.put("message", "Forbidden");
-                return ResponseEntity.status(403).body(resp);
             }
             Map<String, Object> data = adminAnalyticsService.computeCoreAnalytics();
             resp.put("success", true);
@@ -409,25 +363,12 @@ public class AdminController {
                 .collect(Collectors.toList());
     }
 
-    private String extractToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
-        return null;
-    }
-
-    private boolean isAdmin(String token) {
-        String role = jwtUtil.getRoleFromToken(token);
-        return role != null && "ADMIN".equalsIgnoreCase(role.trim());
-    }
-
     @GetMapping("/analytics/top-products")
-    public ResponseEntity<Map<String, Object>> topProducts(@RequestParam(defaultValue = "5") Integer limit, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> topProducts(@RequestParam(defaultValue = "5") Integer limit,
+            HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token) || !isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
@@ -454,8 +395,7 @@ public class AdminController {
     public ResponseEntity<Map<String, Object>> monthlyOrders(HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token) || !isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
@@ -470,12 +410,12 @@ public class AdminController {
             return ResponseEntity.status(500).body(resp);
         }
     }
+
     @GetMapping("/products")
     public ResponseEntity<Map<String, Object>> allProducts(HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token) || !isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
@@ -492,11 +432,11 @@ public class AdminController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<Map<String, Object>> createProduct(@RequestBody Map<String, Object> body, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> createProduct(@RequestBody Map<String, Object> body,
+            HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token) || !isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
@@ -510,7 +450,8 @@ public class AdminController {
                 try {
                     java.math.BigDecimal price = new java.math.BigDecimal(String.valueOf(priceObj));
                     p.setPrice(price);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
             p.setImageUrl((String) body.get("imageUrl"));
             Object stockObj = body.get("stock");
@@ -518,7 +459,8 @@ public class AdminController {
             if (stockObj != null) {
                 try {
                     stock = Integer.valueOf(String.valueOf(stockObj));
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
             p.setStock(stock == null ? 50 : stock);
             Object activeObj = body.get("isActive");
@@ -537,11 +479,11 @@ public class AdminController {
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable String id, @RequestBody Map<String, Object> body, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable String id,
+            @RequestBody Map<String, Object> body, HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token) || !isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
@@ -552,10 +494,14 @@ public class AdminController {
                 resp.put("message", "Product not found");
                 return ResponseEntity.status(404).body(resp);
             }
-            if (body.containsKey("name")) p.setName((String) body.get("name"));
-            if (body.containsKey("description")) p.setDescription((String) body.get("description"));
-            if (body.containsKey("category")) p.setCategory((String) body.get("category"));
-            if (body.containsKey("imageUrl")) p.setImageUrl((String) body.get("imageUrl"));
+            if (body.containsKey("name"))
+                p.setName((String) body.get("name"));
+            if (body.containsKey("description"))
+                p.setDescription((String) body.get("description"));
+            if (body.containsKey("category"))
+                p.setCategory((String) body.get("category"));
+            if (body.containsKey("imageUrl"))
+                p.setImageUrl((String) body.get("imageUrl"));
             if (body.containsKey("isActive")) {
                 Object activeObj = body.get("isActive");
                 p.setIsActive(activeObj == null ? p.getIsActive() : Boolean.valueOf(String.valueOf(activeObj)));
@@ -565,13 +511,15 @@ public class AdminController {
                 try {
                     java.math.BigDecimal price = new java.math.BigDecimal(String.valueOf(priceObj));
                     p.setPrice(price);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
             if (body.containsKey("stock")) {
                 Object stockObj = body.get("stock");
                 try {
                     p.setStock(Integer.valueOf(String.valueOf(stockObj)));
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
             Product saved = productRepository.save(p);
             resp.put("success", true);
@@ -588,8 +536,7 @@ public class AdminController {
     public ResponseEntity<Map<String, Object>> deleteProduct(@PathVariable String id, HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token) || !isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
@@ -615,8 +562,7 @@ public class AdminController {
     public ResponseEntity<Map<String, Object>> initStock(HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token) || !isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
@@ -641,11 +587,11 @@ public class AdminController {
      * POST /api/admin/users
      */
     @PostMapping("/users")
-    public ResponseEntity<Map<String, Object>> createUser(@RequestBody Map<String, String> body, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> createUser(@RequestBody Map<String, String> body,
+            HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token) || !isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
@@ -693,5 +639,272 @@ public class AdminController {
             resp.put("message", "Failed to create user: " + e.getMessage());
             return ResponseEntity.status(500).body(resp);
         }
+    }
+
+    /**
+     * Get global wishlist analytics (admin only)
+     * GET /api/admin/analytics/wishlist
+     */
+    @GetMapping("/analytics/wishlist")
+    public ResponseEntity<Map<String, Object>> wishlistAnalytics(HttpServletRequest request) {
+        Map<String, Object> resp = new HashMap<>();
+        try {
+            if (!isAdminSession(request)) {
+                resp.put("success", false);
+                resp.put("message", "Unauthorized");
+                return ResponseEntity.status(401).body(resp);
+            }
+
+            // Get wishlist repository to query all wishlists
+            com.luxejewels.repository.WishlistRepository wishlistRepo = com.luxejewels.JewelleryShopApplication
+                    .getWishlistRepository();
+
+            if (wishlistRepo == null) {
+                resp.put("success", false);
+                resp.put("message", "Wishlist service not available");
+                return ResponseEntity.status(500).body(resp);
+            }
+
+            List<com.luxejewels.model.WishlistItem> allWishlists = wishlistRepo.findAll();
+
+            // Count total wishlist items
+            resp.put("totalWishlistItems", allWishlists.size());
+
+            // Count unique users with wishlists
+            long usersWithWishlist = allWishlists.stream()
+                    .map(com.luxejewels.model.WishlistItem::getUserId)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .count();
+            resp.put("usersWithWishlist", usersWithWishlist);
+
+            // Most wishlisted products
+            Map<String, Long> productCounts = allWishlists.stream()
+                    .filter(w -> w.getProductId() != null)
+                    .collect(java.util.stream.Collectors.groupingBy(
+                            com.luxejewels.model.WishlistItem::getProductId,
+                            java.util.stream.Collectors.counting()));
+
+            List<Map<String, Object>> topProducts = productCounts.entrySet().stream()
+                    .sorted((a, b) -> Long.compare(b.getValue(), a.getValue()))
+                    .limit(10)
+                    .map(e -> {
+                        Map<String, Object> m = new HashMap<>();
+                        m.put("productId", e.getKey());
+                        m.put("wishlistCount", e.getValue());
+                        // Try to get product name
+                        productRepository.findById(e.getKey()).ifPresent(p -> m.put("productName", p.getName()));
+                        return m;
+                    })
+                    .collect(Collectors.toList());
+            resp.put("topWishlistedProducts", topProducts);
+
+            resp.put("success", true);
+            return ResponseEntity.ok(resp);
+        } catch (Exception e) {
+            resp.put("success", false);
+            resp.put("message", "Failed to fetch wishlist analytics: " + e.getMessage());
+            return ResponseEntity.status(500).body(resp);
+        }
+    }
+
+    /**
+     * Get global cart analytics (admin only)
+     * GET /api/admin/analytics/cart
+     */
+    @GetMapping("/analytics/cart")
+    public ResponseEntity<Map<String, Object>> cartAnalytics(HttpServletRequest request) {
+        Map<String, Object> resp = new HashMap<>();
+        try {
+            if (!isAdminSession(request)) {
+                resp.put("success", false);
+                resp.put("message", "Unauthorized");
+                return ResponseEntity.status(401).body(resp);
+            }
+
+            // Get cart repository to query all carts
+            com.luxejewels.repository.CartRepository cartRepo = com.luxejewels.JewelleryShopApplication
+                    .getCartRepository();
+
+            if (cartRepo == null) {
+                resp.put("success", false);
+                resp.put("message", "Cart service not available");
+                return ResponseEntity.status(500).body(resp);
+            }
+
+            List<com.luxejewels.model.CartItem> allCartItems = cartRepo.findAll();
+
+            // Count total cart items
+            resp.put("totalCartItems", allCartItems.size());
+
+            // Count unique users with carts
+            long usersWithCart = allCartItems.stream()
+                    .map(com.luxejewels.model.CartItem::getUserId)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .count();
+            resp.put("usersWithCart", usersWithCart);
+
+            // Calculate total cart value
+            final BigDecimal[] totalValue = { BigDecimal.ZERO };
+            for (com.luxejewels.model.CartItem item : allCartItems) {
+                if (item.getProductId() != null) {
+                    productRepository.findById(item.getProductId()).ifPresent(p -> {
+                        if (p.getPrice() != null && item.getQuantity() != null) {
+                            totalValue[0] = totalValue[0]
+                                    .add(p.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
+                        }
+                    });
+                }
+            }
+            resp.put("totalCartValue", totalValue[0]);
+
+            // Most added to cart products
+            Map<String, Long> productCounts = allCartItems.stream()
+                    .filter(c -> c.getProductId() != null)
+                    .collect(java.util.stream.Collectors.groupingBy(
+                            com.luxejewels.model.CartItem::getProductId,
+                            java.util.stream.Collectors
+                                    .summingLong(c -> c.getQuantity() != null ? c.getQuantity() : 1)));
+
+            List<Map<String, Object>> topProducts = productCounts.entrySet().stream()
+                    .sorted((a, b) -> Long.compare(b.getValue(), a.getValue()))
+                    .limit(10)
+                    .map(e -> {
+                        Map<String, Object> m = new HashMap<>();
+                        m.put("productId", e.getKey());
+                        m.put("addToCartCount", e.getValue());
+                        productRepository.findById(e.getKey()).ifPresent(p -> {
+                            m.put("productName", p.getName());
+                            m.put("price", p.getPrice());
+                        });
+                        return m;
+                    })
+                    .collect(Collectors.toList());
+            resp.put("topAddedToCartProducts", topProducts);
+
+            resp.put("success", true);
+            return ResponseEntity.ok(resp);
+        } catch (Exception e) {
+            resp.put("success", false);
+            resp.put("message", "Failed to fetch cart analytics: " + e.getMessage());
+            return ResponseEntity.status(500).body(resp);
+        }
+    }
+
+    /**
+     * Get recent customers (admin only)
+     * GET /api/admin/analytics/recent-customers
+     */
+    @GetMapping("/analytics/recent-customers")
+    public ResponseEntity<Map<String, Object>> recentCustomers(
+            @RequestParam(defaultValue = "5") Integer limit,
+            HttpServletRequest request) {
+        Map<String, Object> resp = new HashMap<>();
+        try {
+            if (!isAdminSession(request)) {
+                resp.put("success", false);
+                resp.put("message", "Unauthorized");
+                return ResponseEntity.status(401).body(resp);
+            }
+
+            List<User> recentUsers = userRepository.findAll(
+                    Sort.by(Sort.Direction.DESC, "createdAt")).stream()
+                    .limit(limit)
+                    .collect(Collectors.toList());
+
+            // Get order counts and total spent for each user
+            List<Map<String, Object>> enriched = new ArrayList<>();
+            for (User u : recentUsers) {
+                Map<String, Object> m = new HashMap<>();
+                m.put("id", u.getId());
+                m.put("name", u.getName());
+                m.put("email", u.getEmail());
+                m.put("createdAt", u.getCreatedAt());
+
+                // Get order stats
+                List<Order> userOrders = orderRepository.findByUserId(u.getId());
+                m.put("orderCount", userOrders.size());
+                BigDecimal totalSpent = userOrders.stream()
+                        .filter(o -> "PAID".equalsIgnoreCase(o.getPaymentStatus()))
+                        .map(Order::getTotal)
+                        .filter(Objects::nonNull)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                m.put("totalSpent", totalSpent);
+
+                enriched.add(m);
+            }
+
+            resp.put("success", true);
+            resp.put("customers", enriched);
+            return ResponseEntity.ok(resp);
+        } catch (Exception e) {
+            resp.put("success", false);
+            resp.put("message", "Failed to fetch recent customers: " + e.getMessage());
+            return ResponseEntity.status(500).body(resp);
+        }
+    }
+
+    /**
+     * Get recent orders (admin only)
+     * GET /api/admin/analytics/recent-orders
+     */
+    @GetMapping("/analytics/recent-orders")
+    public ResponseEntity<Map<String, Object>> recentOrders(
+            @RequestParam(defaultValue = "5") Integer limit,
+            HttpServletRequest request) {
+        Map<String, Object> resp = new HashMap<>();
+        try {
+            if (!isAdminSession(request)) {
+                resp.put("success", false);
+                resp.put("message", "Unauthorized");
+                return ResponseEntity.status(401).body(resp);
+            }
+
+            List<Order> recentOrders = orderRepository.findAll(
+                    Sort.by(Sort.Direction.DESC, "createdAt")).stream()
+                    .limit(limit)
+                    .collect(Collectors.toList());
+
+            List<Map<String, Object>> enriched = new ArrayList<>();
+            for (Order o : recentOrders) {
+                Map<String, Object> m = new HashMap<>();
+                m.put("id", o.getId());
+                m.put("userId", o.getUserId());
+
+                // Get user name
+                if (o.getUserId() != null) {
+                    User u = userRepository.findById(o.getUserId()).orElse(null);
+                    if (u != null)
+                        m.put("userName", u.getName());
+                }
+
+                m.put("total", o.getTotal());
+                m.put("status", o.getStatus());
+                m.put("paymentStatus", o.getPaymentStatus());
+                m.put("createdAt", o.getCreatedAt());
+                m.put("itemCount", o.getItems() != null ? o.getItems().size() : 0);
+
+                enriched.add(m);
+            }
+
+            resp.put("success", true);
+            resp.put("orders", enriched);
+            return ResponseEntity.ok(resp);
+        } catch (Exception e) {
+            resp.put("success", false);
+            resp.put("message", "Failed to fetch recent orders: " + e.getMessage());
+            return ResponseEntity.status(500).body(resp);
+        }
+    }
+
+    private boolean isAdminSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return false;
+        String userId = (String) session.getAttribute(AuthController.SESSION_USER_ID);
+        if (userId == null || userId.isBlank()) return false;
+        User u = userService.findById(userId).orElse(null);
+        if (u == null) return false;
+        return u.getRole() != null && "ADMIN".equalsIgnoreCase(u.getRole().trim());
     }
 }

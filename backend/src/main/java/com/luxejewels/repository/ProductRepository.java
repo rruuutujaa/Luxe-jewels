@@ -41,4 +41,11 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     List<Product> findByIsActiveTrueAndStockGreaterThan(Integer stock);
     List<Product> findByCategoryIgnoreCaseAndIsActiveTrueAndStockGreaterThan(String category, Integer stock);
+
+    // Vendor ownership queries
+    List<Product> findByVendorId(String vendorId);
+    List<Product> findByVendorIdAndIsActiveTrue(String vendorId);
+    List<Product> findByVendorIdAndStockLessThan(String vendorId, Integer stock);
+    long countByVendorId(String vendorId);
+    long countByVendorIdAndIsActiveTrue(String vendorId);
 }

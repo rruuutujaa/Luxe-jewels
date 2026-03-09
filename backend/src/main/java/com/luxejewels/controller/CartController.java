@@ -1,15 +1,18 @@
 package com.luxejewels.controller;
 
 import com.luxejewels.model.CartItem;
-import com.luxejewels.security.JwtUtil;
+import com.luxejewels.model.Product;
 import com.luxejewels.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -18,56 +21,50 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/cart")
-@CrossOrigin(origins = "*")
 public class CartController {
 
     @Autowired
     private CartService cartService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     /**
      * Get cart items for logged-in user
      * GET /api/cart
      */
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getCartItems(HttpServletRequest request) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<?> getCartItems(HttpServletRequest request) {
         try {
-            String userId = getUserIdFromToken(request);
+            String userId = getUserIdFromSession(request);
             if (userId == null) {
-                response.put("success", false);
-                response.put("message", "Unauthorized");
-                return ResponseEntity.status(401).body(response);
+                return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
             }
 
             List<CartItem> items = cartService.getCartItems(userId);
-            response.put("success", true);
-            response.put("items", items);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(toCartDtos(items));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Failed to fetch cart items");
-            return ResponseEntity.status(500).body(response);
+            return ResponseEntity.status(500).body(Map.of("message", "Failed to fetch cart items"));
         }
     }
 
     /**
      * Add item to cart
-     * POST /api/cart/add
+     * POST /api/cart
+     * POST /api/cart/add (backward compatible)
      */
-    @PostMapping("/add")
-    public ResponseEntity<Map<String, Object>> addToCart(
+    @PostMapping
+    public ResponseEntity<?> addToCartV2(
             @RequestBody Map<String, Object> requestBody,
             HttpServletRequest request) {
-        Map<String, Object> response = new HashMap<>();
+        return addToCart(requestBody, request);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> addToCart(
+            @RequestBody Map<String, Object> requestBody,
+            HttpServletRequest request) {
         try {
-            String userId = getUserIdFromToken(request);
+            String userId = getUserIdFromSession(request);
             if (userId == null) {
-                response.put("success", false);
-                response.put("message", "Unauthorized");
-                return ResponseEntity.status(401).body(response);
+                return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
             }
 
             String productId = (String) requestBody.get("productId");
@@ -75,14 +72,9 @@ public class CartController {
                     Integer.parseInt(requestBody.get("quantity").toString()) : 1;
 
             CartItem cartItem = cartService.addToCart(userId, productId, quantity);
-            response.put("success", true);
-            response.put("message", "Item added to cart");
-            response.put("item", cartItem);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(toCartDto(cartItem));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Failed to add to cart: " + e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return ResponseEntity.status(500).body(Map.of("message", "Failed to add to cart: " + e.getMessage()));
         }
     }
 
@@ -91,63 +83,55 @@ public class CartController {
      * PUT /api/cart/update/{cartItemId}
      */
     @PutMapping("/update/{cartItemId}")
-    public ResponseEntity<Map<String, Object>> updateQuantity(
+    public ResponseEntity<?> updateQuantity(
             @PathVariable String cartItemId,
             @RequestBody Map<String, Object> requestBody,
             HttpServletRequest request) {
-        Map<String, Object> response = new HashMap<>();
         try {
-            String userId = getUserIdFromToken(request);
+            String userId = getUserIdFromSession(request);
             if (userId == null) {
-                response.put("success", false);
-                response.put("message", "Unauthorized");
-                return ResponseEntity.status(401).body(response);
+                return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
             }
 
             Integer quantity = Integer.parseInt(requestBody.get("quantity").toString());
             CartItem cartItem = cartService.updateQuantity(userId, cartItemId, quantity);
 
             if (cartItem == null) {
-                response.put("success", true);
-                response.put("message", "Item removed from cart");
+                return ResponseEntity.ok(Map.of("removed", true));
             } else {
-                response.put("success", true);
-                response.put("message", "Cart updated");
-                response.put("item", cartItem);
+                return ResponseEntity.ok(toCartDto(cartItem));
             }
-            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Failed to update cart: " + e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return ResponseEntity.status(500).body(Map.of("message", "Failed to update cart: " + e.getMessage()));
         }
     }
 
     /**
      * Remove item from cart
-     * DELETE /api/cart/remove/{cartItemId}
+     * DELETE /api/cart/{cartItemId}
+     * DELETE /api/cart/remove/{cartItemId} (backward compatible)
      */
-    @DeleteMapping("/remove/{cartItemId}")
-    public ResponseEntity<Map<String, Object>> removeFromCart(
+    @DeleteMapping("/{cartItemId}")
+    public ResponseEntity<?> removeFromCartV2(
             @PathVariable String cartItemId,
             HttpServletRequest request) {
-        Map<String, Object> response = new HashMap<>();
+        return removeFromCart(cartItemId, request);
+    }
+
+    @DeleteMapping("/remove/{cartItemId}")
+    public ResponseEntity<?> removeFromCart(
+            @PathVariable String cartItemId,
+            HttpServletRequest request) {
         try {
-            String userId = getUserIdFromToken(request);
+            String userId = getUserIdFromSession(request);
             if (userId == null) {
-                response.put("success", false);
-                response.put("message", "Unauthorized");
-                return ResponseEntity.status(401).body(response);
+                return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
             }
 
             cartService.removeFromCart(userId, cartItemId);
-            response.put("success", true);
-            response.put("message", "Item removed from cart");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(Map.of("success", true));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Failed to remove item: " + e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return ResponseEntity.status(500).body(Map.of("message", "Failed to remove item: " + e.getMessage()));
         }
     }
 
@@ -156,45 +140,56 @@ public class CartController {
      * DELETE /api/cart/clear
      */
     @DeleteMapping("/clear")
-    public ResponseEntity<Map<String, Object>> clearCart(HttpServletRequest request) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<?> clearCart(HttpServletRequest request) {
         try {
-            String userId = getUserIdFromToken(request);
+            String userId = getUserIdFromSession(request);
             if (userId == null) {
-                response.put("success", false);
-                response.put("message", "Unauthorized");
-                return ResponseEntity.status(401).body(response);
+                return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
             }
             cartService.clearCart(userId);
-            response.put("success", true);
-            response.put("message", "Cart cleared");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(Map.of("success", true));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Failed to clear cart: " + e.getMessage());
-            return ResponseEntity.status(500).body(response);
+            return ResponseEntity.status(500).body(Map.of("message", "Failed to clear cart: " + e.getMessage()));
         }
     }
 
     /**
-     * Get user ID from JWT token
+     * Get user ID from HttpSession
      */
-    private String getUserIdFromToken(HttpServletRequest request) {
-        String token = extractToken(request);
-        if (token != null && jwtUtil.validateToken(token)) {
-            return jwtUtil.getUserIdFromToken(token);
-        }
-        return null;
+    private String getUserIdFromSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return null;
+        String userId = (String) session.getAttribute(AuthController.SESSION_USER_ID);
+        return (userId == null || userId.isBlank()) ? null : userId;
     }
 
-    /**
-     * Extract JWT token from request
-     */
-    private String extractToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
+    private List<Map<String, Object>> toCartDtos(List<CartItem> items) {
+        List<Map<String, Object>> out = new ArrayList<>();
+        if (items == null) return out;
+        for (CartItem item : items) {
+            if (item == null) continue;
+            out.add(toCartDto(item));
         }
-        return null;
+        return out;
+    }
+
+    private Map<String, Object> toCartDto(CartItem item) {
+        Product p = item.getProduct();
+        BigDecimal price = (p == null || p.getPrice() == null) ? BigDecimal.ZERO : p.getPrice();
+        int qty = item.getQuantity() == null ? 0 : item.getQuantity();
+        BigDecimal lineTotal = price.multiply(BigDecimal.valueOf(qty));
+        return Map.of(
+                "id", item.getId(),
+                "productId", item.getProductId() != null ? item.getProductId() : (p != null ? p.getId() : null),
+                "quantity", qty,
+                "product", p == null ? null : Map.of(
+                        "id", p.getId(),
+                        "name", p.getName(),
+                        "price", p.getPrice(),
+                        "imageUrl", p.getImageUrl(),
+                        "category", p.getCategory()
+                ),
+                "lineTotal", lineTotal
+        );
     }
 }

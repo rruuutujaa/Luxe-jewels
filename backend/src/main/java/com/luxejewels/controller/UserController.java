@@ -5,9 +5,9 @@ import com.luxejewels.model.User;
 import com.luxejewels.repository.CartRepository;
 import com.luxejewels.repository.OrderRepository;
 import com.luxejewels.repository.WishlistRepository;
-import com.luxejewels.security.JwtUtil;
 import com.luxejewels.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +22,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "*")
 public class UserController {
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     @Autowired
     private UserService userService;
@@ -44,13 +40,12 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> me(HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            String userId = getUserIdFromSession(request);
+            if (userId == null) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
             }
-            String userId = jwtUtil.getUserIdFromToken(token);
             User user = userService.findById(userId).orElse(null);
             if (user == null) {
                 resp.put("success", false);
@@ -80,13 +75,12 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> myStats(HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            String userId = getUserIdFromSession(request);
+            if (userId == null) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
             }
-            String userId = jwtUtil.getUserIdFromToken(token);
 
             int cartCount = cartRepository.findByUserId(userId).stream()
                     .map(ci -> ci.getQuantity() == null ? 0 : ci.getQuantity())
@@ -125,13 +119,12 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> updateProfile(@RequestBody Map<String, String> body, HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            String userId = getUserIdFromSession(request);
+            if (userId == null) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
             }
-            String userId = jwtUtil.getUserIdFromToken(token);
             User user = userService.findById(userId).orElse(null);
             if (user == null) {
                 resp.put("success", false);
@@ -157,13 +150,12 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> setPhone(@RequestBody Map<String, String> body, HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            String userId = getUserIdFromSession(request);
+            if (userId == null) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
             }
-            String userId = jwtUtil.getUserIdFromToken(token);
             User user = userService.findById(userId).orElse(null);
             if (user == null) {
                 resp.put("success", false);
@@ -199,13 +191,12 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> addAddress(@RequestBody Map<String, String> body, HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            String userId = getUserIdFromSession(request);
+            if (userId == null) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
             }
-            String userId = jwtUtil.getUserIdFromToken(token);
             User user = userService.findById(userId).orElse(null);
             if (user == null) {
                 resp.put("success", false);
@@ -222,10 +213,10 @@ public class UserController {
             addr.setPincode(opt(body, "pincode"));
             addr.setPhone(opt(body, "phone"));
             if (isBlank(addr.getLabel()) || isBlank(addr.getName()) || isBlank(addr.getLine1()) ||
-                isBlank(addr.getLine2()) || isBlank(addr.getCity()) || isBlank(addr.getState()) ||
+                isBlank(addr.getCity()) || isBlank(addr.getState()) ||
                 isBlank(addr.getPincode()) || isBlank(addr.getPhone())) {
                 resp.put("success", false);
-                resp.put("message", "All address fields are required");
+                resp.put("message", "Missing required address fields");
                 return ResponseEntity.badRequest().body(resp);
             }
             List<User.Address> list = user.getAddresses();
@@ -249,13 +240,12 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> deleteAddress(@PathVariable String id, HttpServletRequest request) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
+            String userId = getUserIdFromSession(request);
+            if (userId == null) {
                 resp.put("success", false);
                 resp.put("message", "Unauthorized");
                 return ResponseEntity.status(401).body(resp);
             }
-            String userId = jwtUtil.getUserIdFromToken(token);
             User user = userService.findById(userId).orElse(null);
             if (user == null) {
                 resp.put("success", false);
@@ -285,12 +275,12 @@ public class UserController {
         String v = m.get(k);
         return v == null ? null : v.trim();
     }
-    private String extractToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
-        return null;
+
+    private String getUserIdFromSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return null;
+        String userId = (String) session.getAttribute(AuthController.SESSION_USER_ID);
+        return (userId == null || userId.isBlank()) ? null : userId;
     }
 }
 

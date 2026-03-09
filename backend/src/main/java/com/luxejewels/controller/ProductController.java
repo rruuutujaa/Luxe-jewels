@@ -1,13 +1,15 @@
 package com.luxejewels.controller;
 
 import com.luxejewels.model.Product;
-import com.luxejewels.security.JwtUtil;
+import com.luxejewels.model.User;
 import com.luxejewels.service.ProductService;
+import com.luxejewels.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,31 +21,25 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "*")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private UserService userService;
 
     /**
      * Get all products
      * GET /api/products
      */
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllProducts() {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<?> getAllProducts() {
         try {
             List<Product> products = productService.getAllProducts();
-            response.put("success", true);
-            response.put("products", products);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(products);
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Failed to fetch products");
-            return ResponseEntity.status(500).body(response);
+            return ResponseEntity.status(500).body(Map.of("message", "Failed to fetch products"));
         }
     }
 
@@ -82,14 +78,7 @@ public class ProductController {
             HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
-            // Validate authentication (basic check - can be enhanced with role-based access)
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
-                response.put("success", false);
-                response.put("message", "Unauthorized");
-                return ResponseEntity.status(401).body(response);
-            }
-            if (!isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 response.put("success", false);
                 response.put("message", "Forbidden");
                 return ResponseEntity.status(403).body(response);
@@ -118,13 +107,7 @@ public class ProductController {
             HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
-                response.put("success", false);
-                response.put("message", "Unauthorized");
-                return ResponseEntity.status(401).body(response);
-            }
-            if (!isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 response.put("success", false);
                 response.put("message", "Forbidden");
                 return ResponseEntity.status(403).body(response);
@@ -152,13 +135,7 @@ public class ProductController {
             HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
-            String token = extractToken(request);
-            if (token == null || !jwtUtil.validateToken(token)) {
-                response.put("success", false);
-                response.put("message", "Unauthorized");
-                return ResponseEntity.status(401).body(response);
-            }
-            if (!isAdmin(token)) {
+            if (!isAdminSession(request)) {
                 response.put("success", false);
                 response.put("message", "Forbidden");
                 return ResponseEntity.status(403).body(response);
@@ -174,19 +151,13 @@ public class ProductController {
         }
     }
 
-    /**
-     * Extract JWT token from request
-     */
-    private String extractToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
-        return null;
-    }
-
-    private boolean isAdmin(String token) {
-        String role = jwtUtil.getRoleFromToken(token);
-        return role != null && "ADMIN".equalsIgnoreCase(role.trim());
+    private boolean isAdminSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return false;
+        String userId = (String) session.getAttribute(AuthController.SESSION_USER_ID);
+        if (userId == null || userId.isBlank()) return false;
+        User user = userService.findById(userId).orElse(null);
+        if (user == null) return false;
+        return user.getRole() != null && "ADMIN".equalsIgnoreCase(user.getRole().trim());
     }
 }

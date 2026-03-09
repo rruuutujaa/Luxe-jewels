@@ -16,6 +16,9 @@
             <ul class="nav-menu" id="navMenu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="products.html">Shop</a></li>
+                <li><a href="products.html">Collections</a></li>
+                <li id="dashboardItem" style="display:none;"><a href="user-dashboard.html" id="dashboardLink">Dashboard</a></li>
+                <li><a href="user-dashboard.html" id="myOrdersLink">My Orders</a></li>
                 <li><a href="login.html" id="loginLink">Login</a></li>
                 <li><a href="register.html" id="registerLink">Register</a></li>
                 <li><a href="cart.html" id="cartLink">Cart <span class="cart-count" id="cartCount">0</span></a></li>
@@ -57,18 +60,16 @@
 
         // Load wishlist items from backend
         async function loadWishlist() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                document.getElementById('wishlistItems').innerHTML = 
-                    '<p class="error-message">Please <a href="login.html">login</a> to view your wishlist.</p>';
-                return;
-            }
-
             try {
                 const wishlistItems = await fetchWishlistItems();
                 displayWishlistItems(wishlistItems);
             } catch (error) {
                 console.error('Error loading wishlist:', error);
+                if (error && error.status === 401) {
+                    document.getElementById('wishlistItems').innerHTML =
+                        '<p class="error-message">Please <a href="login.html">login</a> to view your wishlist.</p>';
+                    return;
+                }
                 document.getElementById('wishlistItems').innerHTML = 
                     '<p class="error-message">Failed to load wishlist. Please try again.</p>';
             }
@@ -118,8 +119,9 @@
             try {
                 await removeWishlistItem(wishlistItemId);
                 showMessage('Item removed from wishlist', 'success');
-                loadWishlist();
-                updateWishlistCount();
+                if (typeof dispatchDataChanged === 'function') dispatchDataChanged();
+                await loadWishlist();
+                await updateWishlistCount();
             } catch (error) {
                 console.error('Error removing item:', error);
                 showMessage('Failed to remove item. Please try again.', 'error');

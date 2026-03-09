@@ -1,12 +1,13 @@
 package com.luxejewels.controller;
 
 import com.luxejewels.model.User;
-import com.luxejewels.security.JwtUtil;
 import com.luxejewels.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -17,14 +18,12 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*")
 public class AuthController {
+
+    public static final String SESSION_USER_ID = "LUXE_USER_ID";
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     /**
      * Register new user
@@ -109,7 +108,9 @@ public class AuthController {
      * POST /api/auth/login
      */
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, Object>> login(
+            @RequestBody Map<String, String> request,
+            HttpServletRequest httpRequest) {
         Map<String, Object> response = new HashMap<>();
 
         try {
@@ -146,12 +147,12 @@ public class AuthController {
                 return ResponseEntity.status(401).body(response);
             }
 
-            // Generate JWT token
-            String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
+            // Session-based authentication (HttpSession)
+            HttpSession session = httpRequest.getSession(true);
+            session.setAttribute(SESSION_USER_ID, user.getId());
 
             response.put("success", true);
             response.put("message", "Login successful");
-            response.put("token", token);
             response.put("user", Map.of(
                 "id", user.getId(),
                 "name", user.getName(),
@@ -165,5 +166,52 @@ public class AuthController {
             response.put("message", "Login failed: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
+    }
+
+    /**
+     * Get current session user (if logged in)
+     * GET /api/auth/me
+     */
+    @GetMapping("/me")
+    public ResponseEntity<Map<String, Object>> me(HttpServletRequest httpRequest) {
+        Map<String, Object> resp = new HashMap<>();
+        HttpSession session = httpRequest.getSession(false);
+        String userId = session == null ? null : (String) session.getAttribute(SESSION_USER_ID);
+        if (userId == null || userId.isBlank()) {
+            resp.put("authenticated", false);
+            return ResponseEntity.ok(resp);
+        }
+        Optional<User> userOpt = userService.findById(userId);
+        if (userOpt.isEmpty()) {
+            // Session is stale
+            if (session != null) session.invalidate();
+            resp.put("authenticated", false);
+            return ResponseEntity.ok(resp);
+        }
+        User user = userOpt.get();
+        resp.put("authenticated", true);
+        resp.put("user", Map.of(
+                "id", user.getId(),
+                "name", user.getName(),
+                "email", user.getEmail(),
+                "role", user.getRole()
+        ));
+        return ResponseEntity.ok(resp);
+    }
+
+    /**
+     * Logout current session
+     * POST /api/auth/logout
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, Object>> logout(HttpServletRequest httpRequest) {
+        Map<String, Object> resp = new HashMap<>();
+        HttpSession session = httpRequest.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        resp.put("success", true);
+        resp.put("message", "Logged out");
+        return ResponseEntity.ok(resp);
     }
 }

@@ -1,9 +1,11 @@
 package com.luxejewels.service;
 
 import com.luxejewels.model.CartItem;
+import com.luxejewels.model.Notification;
 import com.luxejewels.model.Order;
 import com.luxejewels.model.Product;
 import com.luxejewels.repository.CartRepository;
+import com.luxejewels.repository.NotificationRepository;
 import com.luxejewels.repository.OrderRepository;
 import com.luxejewels.repository.ProductRepository;
 import com.stripe.Stripe;
@@ -36,6 +38,12 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private CouponService couponService;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
     @Value("${app.stripe.secretKey:}")
     private String stripeSecretKey;
 
@@ -43,6 +51,10 @@ public class OrderService {
      * Create order from cart
      */
     public Order createOrder(String userId, Order.ShippingAddress shippingAddress) {
+        return createOrder(userId, shippingAddress, null);
+    }
+
+    public Order createOrder(String userId, Order.ShippingAddress shippingAddress, String couponCode) {
         // Get cart items
         List<CartItem> cartItems = cartRepository.findByUserId(userId);
         if (cartItems.isEmpty()) {
@@ -90,10 +102,12 @@ public class OrderService {
             Order.OrderItem orderItem = new Order.OrderItem();
             // Snapshot important product fields so orders remain valid if product changes later
             orderItem.setProductId(product.getId());
+            orderItem.setVendorId(product.getVendorId());
             orderItem.setProductName(product.getName());
             orderItem.setQuantity(qty);
             orderItem.setPrice(product.getPrice());
             orderItem.setTotal(product.getPrice().multiply(BigDecimal.valueOf(qty)));
+            orderItem.setItemStatus("NEW");
             orderItems.add(orderItem);
             subtotal = subtotal.add(orderItem.getTotal());
         }
@@ -104,8 +118,25 @@ public class OrderService {
 
         order.setItems(orderItems);
         order.setSubtotal(subtotal);
-        order.setTax(subtotal.multiply(BigDecimal.valueOf(0.10))); // 10% tax
-        order.setTotal(subtotal.add(order.getTax()));
+
+        BigDecimal discount = BigDecimal.ZERO;
+        String appliedCode = null;
+        if (couponCode != null && !couponCode.isBlank()) {
+            var couponOpt = couponService.findValidCoupon(couponCode);
+            if (couponOpt.isPresent()) {
+                discount = couponService.computeDiscount(couponOpt.get(), cartItems);
+                if (discount.compareTo(BigDecimal.ZERO) > 0) {
+                    appliedCode = couponOpt.get().getCode();
+                }
+            }
+        }
+        order.setCouponCode(appliedCode);
+        order.setDiscountAmount(discount);
+
+        BigDecimal taxable = subtotal.subtract(discount == null ? BigDecimal.ZERO : discount);
+        if (taxable.compareTo(BigDecimal.ZERO) < 0) taxable = BigDecimal.ZERO;
+        order.setTax(taxable.multiply(BigDecimal.valueOf(0.10))); // 10% tax
+        order.setTotal(taxable.add(order.getTax()));
 
         Order savedOrder = orderRepository.save(order);
 
@@ -184,6 +215,24 @@ public class OrderService {
         o.setPaymentStatus("PAID");
         o.setStatus("PROCESSING");
         Order saved = orderRepository.save(o);
+
+        // Vendor notifications (new paid order)
+        if (saved.getItems() != null) {
+            java.util.Set<String> vendorIds = new java.util.HashSet<>();
+            for (Order.OrderItem item : saved.getItems()) {
+                if (item != null && item.getVendorId() != null && !item.getVendorId().isBlank()) {
+                    vendorIds.add(item.getVendorId());
+                }
+            }
+            for (String vid : vendorIds) {
+                Notification n = new Notification();
+                n.setVendorId(vid);
+                n.setType("NEW_ORDER");
+                n.setTitle("New order received");
+                n.setMessage("Order " + saved.getId() + " has been paid and is ready to process.");
+                notificationRepository.save(n);
+            }
+        }
 
         // Clear cart only after successful payment
         cartRepository.deleteByUserId(userId);

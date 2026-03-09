@@ -37,52 +37,59 @@
 // }
 
 
-function checkAuthStatus() {
+async function checkAuthStatus() {
     try {
-        const token = localStorage.getItem("token");
-        const role = localStorage.getItem("role");
-
         const loginLink = document.getElementById("loginLink");
         const registerLink = document.getElementById("registerLink");
         const logoutItem = document.getElementById("logoutItem");
         const dashboardItem = document.getElementById("dashboardItem");
         const dashboardLink = document.getElementById("dashboardLink");
 
-        if (!token) {
-            // logged OUT view
-            // Show parent LI if possible, or just the link
+        let user = null;
+        try {
+            const me = await fetchAuthMe();
+            user = me && me.authenticated ? me.user : null;
+        } catch (_) {
+            user = null;
+        }
+
+        if (!user) {
             if (loginLink) {
                 loginLink.style.display = "inline-block";
-                if(loginLink.parentElement && loginLink.parentElement.tagName === 'LI') loginLink.parentElement.style.display = 'inline-block';
+                if (loginLink.parentElement && loginLink.parentElement.tagName === "LI") loginLink.parentElement.style.display = "inline-block";
             }
             if (registerLink) {
                 registerLink.style.display = "inline-block";
-                if(registerLink.parentElement && registerLink.parentElement.tagName === 'LI') registerLink.parentElement.style.display = 'inline-block';
+                if (registerLink.parentElement && registerLink.parentElement.tagName === "LI") registerLink.parentElement.style.display = "inline-block";
             }
             if (logoutItem) logoutItem.style.display = "none";
             if (dashboardItem) dashboardItem.style.display = "none";
             return;
         }
 
-        // logged IN view
         if (loginLink) {
             loginLink.style.display = "none";
-            // Hide the bullet point too
-            if(loginLink.parentElement && loginLink.parentElement.tagName === 'LI') loginLink.parentElement.style.display = 'none';
+            if (loginLink.parentElement && loginLink.parentElement.tagName === "LI") loginLink.parentElement.style.display = "none";
         }
         if (registerLink) {
             registerLink.style.display = "none";
-             if(registerLink.parentElement && registerLink.parentElement.tagName === 'LI') registerLink.parentElement.style.display = 'none';
+            if (registerLink.parentElement && registerLink.parentElement.tagName === "LI") registerLink.parentElement.style.display = "none";
         }
         if (logoutItem) logoutItem.style.display = "inline-block";
         if (dashboardItem) dashboardItem.style.display = "inline-block";
 
-        // role routing
         if (dashboardLink) {
-            dashboardLink.href =
-                role && role.toUpperCase() === "ADMIN"
-                ? "admin-dashboard.html"
-                : "user-dashboard.html";
+            const role = String(user.role || "").toUpperCase();
+            if (role === "ADMIN") {
+                dashboardLink.href = "admin-dashboard.html";
+                dashboardLink.textContent = "Dashboard";
+            } else if (role === "VENDOR") {
+                dashboardLink.href = "vendor-dashboard.html";
+                dashboardLink.textContent = "Vendor Dashboard";
+            } else {
+                dashboardLink.href = "user-dashboard.html";
+                dashboardLink.textContent = "My Account";
+            }
         }
     } catch (error) {
         console.error("Error in checkAuthStatus:", error);
@@ -97,27 +104,19 @@ function checkAuthStatus() {
  * Fetches cart items and displays the total count
  */
 async function updateCartCount() {
-    const token = localStorage.getItem('token');
     const badge = document.getElementById("cartBadge"); // Matches existing ID in main.js
     const badge2 = document.getElementById("cartCount"); // Matches ID used in api.js
-
-    if (!token) {
-        if (badge) badge.style.display = "none";
-        if (badge2) badge2.textContent = "0";
-        return;
-    }
+    const navCart = document.getElementById("navCartCount");
 
     try {
-        // Ensure fetchCartItems is available (from api.js)
         if (typeof fetchCartItems !== 'function') return;
 
         const cartItems = await fetchCartItems();
         let count = 0;
         if (Array.isArray(cartItems)) {
             count = cartItems.reduce((sum, item) => {
-                // Filter out null products to match cart display logic
-                if (!item.product) return sum;
-                return sum + (item.quantity || 1);
+                const qty = item && item.quantity ? Number(item.quantity) : 0;
+                return sum + (Number.isFinite(qty) ? qty : 0);
             }, 0);
         }
 
@@ -133,9 +132,14 @@ async function updateCartCount() {
         if (badge2) {
             badge2.textContent = String(count);
         }
+        if (navCart) {
+            navCart.textContent = String(count);
+        }
 
     } catch (e) {
-        console.error("Failed to update cart count", e);
+        if (badge) badge.style.display = "none";
+        if (badge2) badge2.textContent = "0";
+        if (navCart) navCart.textContent = "0";
     }
 }
 
@@ -147,27 +151,23 @@ async function updateCartCount() {
  * Fetches wishlist items and displays the total count
  */
 async function updateWishlistCount() {
-    const token = localStorage.getItem('token');
     const wishlistCountElement = document.getElementById('wishlistCount');
     const wishlistBadgeElement = document.getElementById('wishlistBadge'); // Handle user-dashboard ID
+    const navWishlist = document.getElementById('navWishlistCount');
     
-    if (!wishlistCountElement && !wishlistBadgeElement) return;
-
-    if (!token) {
-        if (wishlistCountElement) wishlistCountElement.textContent = '0';
-        if (wishlistBadgeElement) wishlistBadgeElement.textContent = '0';
-        return;
-    }
+    if (!wishlistCountElement && !wishlistBadgeElement && !navWishlist) return;
 
     try {
         const wishlistItems = await fetchWishlistItems();
-        const count = wishlistItems.length || '0';
+        const count = Array.isArray(wishlistItems) ? wishlistItems.length : 0;
         
-        if (wishlistCountElement) wishlistCountElement.textContent = count;
-        if (wishlistBadgeElement) wishlistBadgeElement.textContent = count;
+        if (wishlistCountElement) wishlistCountElement.textContent = String(count);
+        if (wishlistBadgeElement) wishlistBadgeElement.textContent = String(count);
+        if (navWishlist) navWishlist.textContent = String(count);
     } catch (error) {
         if (wishlistCountElement) wishlistCountElement.textContent = '0';
         if (wishlistBadgeElement) wishlistBadgeElement.textContent = '0';
+        if (navWishlist) navWishlist.textContent = '0';
     }
 }
 
@@ -177,25 +177,18 @@ async function updateWishlistCount() {
  * @param {string} productId - Product ID to add
  */
 async function addToCartHandler(productId) {
-    const token = localStorage.getItem('token');
-    
-    if (!token) {
-        alert('Please login to add items to cart.');
-        window.location.href = 'login.html';
-        return;
-    }
-
     try {
-        const response = await addToCart(productId, 1);
-        if (response.success) {
-            updateCartCount();
-            window.location.href = 'cart.html';
-        } else {
-            alert(response.message || 'Failed to add product to cart');
-        }
+        await addToCart(productId, 1);
+        if (typeof dispatchDataChanged === 'function') dispatchDataChanged();
+        await updateCartCount();
+        showToast('Added to cart', 'success');
     } catch (error) {
+        if (error && error.status === 401) {
+            window.location.href = 'login.html';
+            return;
+        }
         console.error('Error adding to cart:', error);
-        alert('Failed to add product to cart. Please try again.');
+        showToast('Failed to add product to cart', 'error');
     }
 }
 
@@ -205,14 +198,6 @@ async function addToCartHandler(productId) {
  * @param {string} productId - Product ID to toggle
  */
 async function toggleWishlist(productId) {
-    const token = localStorage.getItem('token');
-    
-    if (!token) {
-        alert('Please login to add items to wishlist.');
-        window.location.href = 'login.html';
-        return;
-    }
-
     try {
         // First, check if item is already in wishlist
         const wishlistItems = await fetchWishlistItems();
@@ -223,18 +208,20 @@ async function toggleWishlist(productId) {
         
         if (existingItem) {
             // Remove from wishlist
-            await removeWishlistItem(existingItem.id);
-            updateWishlistCount();
+            await removeWishlistItem(existingItem.id || existingItem._id);
+            if (typeof dispatchDataChanged === 'function') dispatchDataChanged();
+            await updateWishlistCount();
         } else {
             // Add to wishlist
-            const response = await addToWishlist(productId);
-            if (response.success) {
-                updateWishlistCount();
-            } else {
-                alert(response.message || 'Failed to add to wishlist');
-            }
+            await addToWishlist(productId);
+            if (typeof dispatchDataChanged === 'function') dispatchDataChanged();
+            await updateWishlistCount();
         }
     } catch (error) {
+        if (error && error.status === 401) {
+            window.location.href = 'login.html';
+            return;
+        }
         console.error('Error toggling wishlist:', error);
         alert('Failed to update wishlist. Please try again.');
     }
@@ -351,16 +338,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (logoutLink) {
         logoutLink.addEventListener('click', (e) => {
             e.preventDefault();
-            if (typeof logout === 'function') {
-                logout();
-            } else {
-                console.error('Logout function not found');
-                // Fallback
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                localStorage.removeItem('role');
-                window.location.href = 'index.html';
-            }
+            (async () => {
+                try {
+                    if (typeof logout === 'function') {
+                        await logout();
+                    }
+                } finally {
+                    window.location.href = 'index.html';
+                }
+            })();
         });
     }
 
@@ -398,4 +384,10 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => { modal.style.display = 'none'; }, 3000);
         };
     }
+});
+
+// Live UI updates across pages when cart/wishlist changes
+window.addEventListener('luxe:data-changed', () => {
+    updateCartCount();
+    updateWishlistCount();
 });

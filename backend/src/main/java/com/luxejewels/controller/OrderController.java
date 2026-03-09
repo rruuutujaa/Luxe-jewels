@@ -1,13 +1,13 @@
 package com.luxejewels.controller;
 
 import com.luxejewels.model.Order;
-import com.luxejewels.security.JwtUtil;
 import com.luxejewels.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,14 +18,10 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "*")
 public class OrderController {
 
     @Autowired
     private OrderService orderService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     /**
      * Create new order from cart
@@ -37,7 +33,7 @@ public class OrderController {
             HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
-            String userId = getUserIdFromToken(request);
+            String userId = getUserIdFromSession(request);
             if (userId == null) {
                 response.put("success", false);
                 response.put("message", "Unauthorized");
@@ -63,7 +59,10 @@ public class OrderController {
             shippingAddress.setZipCode(shippingAddressMap.get("zipCode"));
             shippingAddress.setCountry(shippingAddressMap.get("country"));
 
-            Order order = orderService.createOrder(userId, shippingAddress);
+            String couponCode = null;
+            Object cc = requestBody.get("couponCode");
+            if (cc != null) couponCode = String.valueOf(cc).trim();
+            Order order = orderService.createOrder(userId, shippingAddress, couponCode);
             response.put("success", true);
             response.put("message", "Order created successfully");
             response.put("orderId", order.getId());
@@ -86,7 +85,7 @@ public class OrderController {
             HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
-            String userId = getUserIdFromToken(request);
+            String userId = getUserIdFromSession(request);
             if (userId == null) {
                 response.put("success", false);
                 response.put("message", "Unauthorized");
@@ -111,13 +110,29 @@ public class OrderController {
 
     /**
      * Get orders for logged-in user
-     * GET /api/orders/my
+     * GET /api/orders
+     * GET /api/orders/my (backward compatible)
      */
+    @GetMapping
+    public ResponseEntity<?> getOrders(HttpServletRequest request) {
+        try {
+            String userId = getUserIdFromSession(request);
+            if (userId == null) {
+                return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
+            }
+            List<Order> orders = orderService.getUserOrders(userId);
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("message", "Failed to fetch orders: " + e.getMessage()));
+        }
+    }
+
     @GetMapping("/my")
-    public ResponseEntity<Map<String, Object>> getMyOrders(HttpServletRequest request) {
+    public ResponseEntity<?> getMyOrders(HttpServletRequest request) {
+        // Backward compatible wrapper shape for older frontend code
         Map<String, Object> response = new HashMap<>();
         try {
-            String userId = getUserIdFromToken(request);
+            String userId = getUserIdFromSession(request);
             if (userId == null) {
                 response.put("success", false);
                 response.put("message", "Unauthorized");
@@ -135,24 +150,12 @@ public class OrderController {
     }
 
     /**
-     * Get user ID from JWT token
+     * Get user ID from HttpSession
      */
-    private String getUserIdFromToken(HttpServletRequest request) {
-        String token = extractToken(request);
-        if (token != null && jwtUtil.validateToken(token)) {
-            return jwtUtil.getUserIdFromToken(token);
-        }
-        return null;
-    }
-
-    /**
-     * Extract JWT token from request
-     */
-    private String extractToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
-        return null;
+    private String getUserIdFromSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return null;
+        String userId = (String) session.getAttribute(AuthController.SESSION_USER_ID);
+        return (userId == null || userId.isBlank()) ? null : userId;
     }
 }

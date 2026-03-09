@@ -22,6 +22,11 @@ public class User {
     private java.util.List<Address> addresses;
     private Boolean disabled;
 
+    // Vendor profile fields (used when role = "VENDOR")
+    private String companyName;
+    private String businessAddress;
+    private String bankDetails;
+
     // Constructors
     public User() {
         this.role = "USER";
@@ -117,6 +122,30 @@ public class User {
 
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getBusinessAddress() {
+        return businessAddress;
+    }
+
+    public void setBusinessAddress(String businessAddress) {
+        this.businessAddress = businessAddress;
+    }
+
+    public String getBankDetails() {
+        return bankDetails;
+    }
+
+    public void setBankDetails(String bankDetails) {
+        this.bankDetails = bankDetails;
     }
 
     public static class Address {
