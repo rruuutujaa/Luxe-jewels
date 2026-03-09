@@ -301,6 +301,8 @@
                         const role = String(user.role || '').toUpperCase();
                         if (role === 'ADMIN') {
                             window.location.href = 'admin-dashboard.html';
+                        } else if (role === 'VENDOR') {
+                            window.location.href = 'vendor-dashboard.html';
                         } else {
                             window.location.href = 'user-dashboard.html';
                         }
@@ -311,7 +313,9 @@
                 }
             } catch (error) {
                 messageDiv.className = 'message error';
-                messageDiv.textContent = 'Login failed. Please check your credentials.';
+                messageDiv.textContent = error.message === 'Failed to fetch' 
+                    ? 'Network error. Make sure the backend server is running.' 
+                    : (error.message || 'Login failed. Please check your credentials.');
                 console.error('Login error:', error);
             }
         });

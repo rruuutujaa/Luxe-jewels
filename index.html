@@ -1,64 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Luxe Jewels — premium gold and diamond jewellery. Explore latest arrivals, signature collections, and timeless pieces.">
+    <meta name="description"
+        content="Luxe Jewels — premium gold and diamond jewellery. Explore latest arrivals, signature collections, and timeless pieces.">
     <meta name="theme-color" content="#0e2a4f">
     <title>Luxe Jewels - Premium Jewellery Collection</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
         /* Beautiful Animation Styles */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
-        
+
         html {
             scroll-behavior: smooth;
         }
-        
+
         * {
             font-family: 'Montserrat', sans-serif;
         }
-        
-        h1, h2, h3, h4, h5, h6 {
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             font-family: 'Playfair Display', serif;
         }
-        
+
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         @keyframes shimmer {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
+            0% {
+                background-position: -200% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
         }
+
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
         }
+
         @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.5); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(212, 175, 55, 0.5);
+            }
         }
+
         @keyframes sparkle {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
         }
+
         @keyframes zoomIn {
-            from { transform: scale(1); }
-            to { transform: scale(1.05); }
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.05);
+            }
         }
+
         @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
+
         @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
-        
+
         .animate-fade {
             animation: fadeInUp 1s ease forwards;
         }
+
         .gold-shimmer {
             background: linear-gradient(90deg, #e6c35a 0%, #f4e4bc 25%, #e6c35a 50%, #f4e4bc 75%, #e6c35a 100%);
             background-size: 200% auto;
@@ -66,33 +135,46 @@
             -webkit-text-fill-color: transparent;
             animation: shimmer 3s linear infinite;
         }
+
         .float-animation {
             animation: float 4s ease-in-out infinite;
         }
+
         .glow-animation {
             animation: pulse-glow 2s ease-in-out infinite;
         }
-        
+
         /* Smooth scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
         }
+
         ::-webkit-scrollbar-track {
             background: #f5efe6;
         }
+
         ::-webkit-scrollbar-thumb {
             background: linear-gradient(180deg, #e6c35a, #b8962e);
             border-radius: 5px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, #f0cf6c, #c5a574);
         }
-        
+
         /* Section backgrounds with luxury gradient */
-        .luxe-bg-1 { background: linear-gradient(135deg, #faf8f3 0%, #f5efe6 50%, #eee7df 100%); }
-        .luxe-bg-2 { background: linear-gradient(135deg, #f5efe6 0%, #e5dac9 100%); }
-        .luxe-bg-3 { background: linear-gradient(135deg, #f3ede4 0%, #e5dac9 100%); }
-        
+        .luxe-bg-1 {
+            background: linear-gradient(135deg, #faf8f3 0%, #f5efe6 50%, #eee7df 100%);
+        }
+
+        .luxe-bg-2 {
+            background: linear-gradient(135deg, #f5efe6 0%, #e5dac9 100%);
+        }
+
+        .luxe-bg-3 {
+            background: linear-gradient(135deg, #f3ede4 0%, #e5dac9 100%);
+        }
+
         /* Card hover effects with zoom */
         .luxe-card {
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -100,6 +182,7 @@
             overflow: hidden;
             cursor: pointer;
         }
+
         .luxe-card::before {
             content: '';
             position: absolute;
@@ -107,36 +190,41 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.6s ease;
             z-index: 1;
             pointer-events: none;
         }
+
         .luxe-card:hover::before {
             left: 100%;
         }
+
         .luxe-card:hover {
             transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
         }
-        
+
         /* Grid items with zoom on hover */
         .grid-item {
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
         }
+
         .grid-item:hover {
             transform: scale(1.03);
             z-index: 10;
         }
+
         .grid-item:hover img {
             transform: scale(1.1);
         }
+
         .grid-item img {
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
+
         /* Button effects */
         .luxe-btn {
             position: relative;
@@ -144,17 +232,19 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
+
         .luxe-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
         }
-        
+
         /* Enhanced section titles */
         .section-title-luxe {
             font-family: 'Playfair Display', serif;
             position: relative;
             display: inline-block;
         }
+
         .section-title-luxe::after {
             content: '';
             position: absolute;
@@ -165,12 +255,13 @@
             height: 3px;
             background: linear-gradient(90deg, transparent, #e6c35a, transparent);
         }
-        
+
         /* Navigation hover effects */
         .nav-menu a {
             position: relative;
             transition: all 0.3s ease;
         }
+
         .nav-menu a::after {
             content: '';
             position: absolute;
@@ -181,43 +272,49 @@
             background: linear-gradient(90deg, #e6c35a, #b8962e);
             transition: width 0.3s ease;
         }
+
         .nav-menu a:hover::after,
         .nav-menu a.active::after {
             width: 100%;
         }
-        
+
         /* Product card zoom effect */
         .product-zoom {
             overflow: hidden;
         }
+
         .product-zoom img {
             transition: transform 0.5s ease;
         }
+
         .product-zoom:hover img {
             transform: scale(1.1);
         }
-        
+
         /* Smooth image zoom on category cards */
         .category-card {
             overflow: hidden;
             position: relative;
         }
-        .category-card > div:first-child {
+
+        .category-card>div:first-child {
             transition: transform 0.6s ease;
         }
-        .category-card:hover > div:first-child {
+
+        .category-card:hover>div:first-child {
             transform: scale(1.1);
         }
-        
+
         /* Hero section text animation */
         .hero-content {
             animation: fadeInUp 1.2s ease-out;
         }
-        
+
         /* CTA Button pulse */
         .cta-pulse {
             position: relative;
         }
+
         .cta-pulse::before {
             content: '';
             position: absolute;
@@ -231,29 +328,71 @@
             animation: pulse-glow 2s ease-in-out infinite;
             z-index: -1;
         }
+
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         @keyframes shimmer {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
+            0% {
+                background-position: -200% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
         }
+
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
         }
+
         @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.5); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(212, 175, 55, 0.5);
+            }
         }
+
         @keyframes sparkle {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
         }
+
         .animate-fade {
             animation: fadeInUp 1s ease forwards;
         }
+
         .gold-shimmer {
             background: linear-gradient(90deg, #e6c35a 0%, #f4e4bc 25%, #e6c35a 50%, #f4e4bc 75%, #e6c35a 100%);
             background-size: 200% auto;
@@ -261,22 +400,35 @@
             -webkit-text-fill-color: transparent;
             animation: shimmer 3s linear infinite;
         }
+
         .float-animation {
             animation: float 4s ease-in-out infinite;
         }
+
         .glow-animation {
             animation: pulse-glow 2s ease-in-out infinite;
         }
+
         /* Section backgrounds with luxury gradient */
-        .luxe-bg-1 { background: linear-gradient(135deg, #faf8f3 0%, #f5efe6 50%, #eee7df 100%); }
-        .luxe-bg-2 { background: linear-gradient(135deg, #f5efe6 0%, #e5dac9 100%); }
-        .luxe-bg-3 { background: linear-gradient(135deg, #f3ede4 0%, #e5dac9 100%); }
+        .luxe-bg-1 {
+            background: linear-gradient(135deg, #faf8f3 0%, #f5efe6 50%, #eee7df 100%);
+        }
+
+        .luxe-bg-2 {
+            background: linear-gradient(135deg, #f5efe6 0%, #e5dac9 100%);
+        }
+
+        .luxe-bg-3 {
+            background: linear-gradient(135deg, #f3ede4 0%, #e5dac9 100%);
+        }
+
         /* Card hover effects */
         .luxe-card {
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
         }
+
         .luxe-card::before {
             content: '';
             position: absolute;
@@ -284,23 +436,27 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.6s ease;
             z-index: 1;
         }
+
         .luxe-card:hover::before {
             left: 100%;
         }
+
         .luxe-card:hover {
             transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
         }
+
         /* Button effects */
         .luxe-btn {
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
         }
+
         .luxe-btn::after {
             content: '';
             position: absolute;
@@ -308,21 +464,24 @@
             left: 50%;
             width: 0;
             height: 0;
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
+
         .luxe-btn:hover::after {
             width: 300px;
             height: 300px;
         }
+
         /* Enhanced section titles */
         .section-title-luxe {
             font-family: 'Playfair Display', serif;
             position: relative;
             display: inline-block;
         }
+
         .section-title-luxe::after {
             content: '';
             position: absolute;
@@ -336,20 +495,20 @@
     </style>
 </head>
 <script>
-/* Smooth scroll behavior - elegant and clean */
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+    /* Smooth scroll behavior - elegant and clean */
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
     });
-});
 </script>
 
 
- 
+
 
 
 
@@ -375,17 +534,18 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 <li><a href="products.html">Shop</a></li>
                 <li><a href="products.html">Collections</a></li>
                 <li id="dashboardItem" style="display:none;">
-    <a href="user-dashboard.html" id="dashboardLink">Dashboard</a>
-</li>
+                    <a href="user-dashboard.html" id="dashboardLink">Dashboard</a>
+                </li>
 
                 <li><a href="user-dashboard.html" id="myOrdersLink">My Orders</a></li>
                 <li><a href="login.html" id="loginLink">Login</a></li>
                 <li><a href="register.html" id="registerLink">Register</a></li>
                 <li><a href="cart.html" id="cartLink">Cart <span class="cart-count" id="cartCount">0</span></a></li>
-                <li><a href="wishlist.html" id="wishlistLink">Wishlist <span class="wishlist-count" id="wishlistCount">0</span></a></li>
+                <li><a href="wishlist.html" id="wishlistLink">Wishlist <span class="wishlist-count"
+                            id="wishlistCount">0</span></a></li>
                 <li id="logoutItem" style="display: none;"><a href="#" id="logoutLink">Logout</a></li>
             </ul>
-<div class="hamburger" id="hamburger">
+            <div class="hamburger" id="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -395,93 +555,92 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
     <section style="position:relative;width:100%;height:100vh;overflow:hidden;font-family: 'Segoe UI', serif;">
 
-<!-- SLIDES -->
-<div id="heroSlides" style="position:absolute;width:100%;height:100%;">
+        <!-- SLIDES -->
+        <div id="heroSlides" style="position:absolute;width:100%;height:100%;">
 
-<!-- Slide 1 -->
-<div class="hero-slide" style="position:absolute;width:100%;height:100%;opacity:1;transition:opacity 1.2s ease;">
-    <div class="parallax-bg"
-style="position:absolute;width:100%;height:110%;
+            <!-- Slide 1 -->
+            <div class="hero-slide"
+                style="position:absolute;width:100%;height:100%;opacity:1;transition:opacity 1.2s ease;">
+                <div class="parallax-bg" style="position:absolute;width:100%;height:110%;
 background:url('https://i.pinimg.com/1200x/f1/ff/7c/f1ff7c81e4e91669da10bdc8946510a0.jpg') center/cover no-repeat;
 top:-5%;">
 
-    transform:scale(1.08);transition:transform 8s ease;"></div>
+                    transform:scale(1.08);transition:transform 8s ease;"></div>
 
-    <div style="position:absolute;width:100%;height:100%;
+                <div style="position:absolute;width:100%;height:100%;
     background:linear-gradient(180deg,
     rgba(0,0,0,0.15),
     rgba(0,0,0,0.05),
     rgba(0,0,0,0.30));"></div>
-</div>
+            </div>
 
-<!-- Slide 2 -->
-<div class="hero-slide" style="position:absolute;width:100%;height:100%;opacity:0;transition:opacity 1.2s ease;">
-    <div class="parallax-bg"
-style="position:absolute;width:100%;height:110%;
+            <!-- Slide 2 -->
+            <div class="hero-slide"
+                style="position:absolute;width:100%;height:100%;opacity:0;transition:opacity 1.2s ease;">
+                <div class="parallax-bg" style="position:absolute;width:100%;height:110%;
 background:url('https://i.pinimg.com/736x/6f/86/78/6f86787b64b2166b680c2101980ca2af.jpg') center/cover no-repeat;
 top:-5%;">
 
-    transform:scale(1.08);transition:transform 8s ease;"></div>
+                    transform:scale(1.08);transition:transform 8s ease;"></div>
 
-    <div style="position:absolute;width:100%;height:100%;
+                <div style="position:absolute;width:100%;height:100%;
     background:linear-gradient(180deg,
     rgba(0,0,0,0.15),
     rgba(0,0,0,0.05),
     rgba(0,0,0,0.30));"></div>
-</div>
+            </div>
 
-<!-- Slide 3 -->
-<div class="hero-slide" style="position:absolute;width:100%;height:100%;opacity:0;transition:opacity 1.2s ease;">
-    <div class="parallax-bg"
-style="position:absolute;width:100%;height:110%;
+            <!-- Slide 3 -->
+            <div class="hero-slide"
+                style="position:absolute;width:100%;height:100%;opacity:0;transition:opacity 1.2s ease;">
+                <div class="parallax-bg" style="position:absolute;width:100%;height:110%;
 background:url('https://i.pinimg.com/736x/a7/4f/18/a74f18348e1d5301179adca147433a18.jpg') center/cover no-repeat;
 top:-5%;">
 
-    transform:scale(1.08);transition:transform 8s ease;"></div>
+                    transform:scale(1.08);transition:transform 8s ease;"></div>
 
-    <div style="position:absolute;width:100%;height:100%;
+                <div style="position:absolute;width:100%;height:100%;
     background:linear-gradient(180deg,
     rgba(0,0,0,0.15),
     rgba(0,0,0,0.05),
     rgba(0,0,0,0.30));"></div>
-</div>
+            </div>
 
-</div>
+        </div>
 
 
-<!-- CONTENT -->
-<div style="position:relative;z-index:5;color:white;text-align:center;
+        <!-- CONTENT -->
+        <div style="position:relative;z-index:5;color:white;text-align:center;
 top:50%;transform:translateY(-50%);
 max-width:900px;margin:auto;padding:20px;">
 
-<p style="letter-spacing:4px;
+            <p style="letter-spacing:4px;
 font-size:13px;
 text-transform:uppercase;
 opacity:.9;
 margin-bottom:18px;">
-Hallmarked Gold • Certified Diamonds
-</p>
+                Hallmarked Gold • Certified Diamonds
+            </p>
 
-<h1 style="
+            <h1 style="
 font-size:60px;
 font-weight:600;
 letter-spacing:1px;
 margin:0 0 18px 0;
 text-shadow:0 10px 40px rgba(0,0,0,0.45);">
-Where Every Sparkle Tells a Story
-</h1>
+                Where Every Sparkle Tells a Story
+            </h1>
 
-<p style="
+            <p style="
 font-size:21px;
 line-height:1.6;
 opacity:.95;
 margin-bottom:34px;
 text-shadow:0 4px 18px rgba(0,0,0,0.35);">
-Timeless jewellery crafted to celebrate your rare moments.
-</p>
+                Timeless jewellery crafted to celebrate your rare moments.
+            </p>
 
-<a href="products.html"
-style="
+            <a href="products.html" style="
 display:inline-block;
 background:linear-gradient(135deg,#e6c35a,#b8962e);
 color:white;
@@ -497,63 +656,63 @@ transition:all .4s ease;
 cursor:pointer;
 position:relative;
 overflow:hidden;
-"
-onmouseover="this.style.transform='translateY(-4px) scale(1.05)';this.style.boxShadow='0 15px 40px rgba(212,175,55,.6)';this.style.filter='brightness(1.1)';"
-onmouseout="this.style.transform='translateY(0) scale(1)';this.style.boxShadow='0 8px 20px rgba(212,175,55,.35)';this.style.filter='brightness(1)';"
->
-Explore Collection
-</a>
+" onmouseover="this.style.transform='translateY(-4px) scale(1.05)';this.style.boxShadow='0 15px 40px rgba(212,175,55,.6)';this.style.filter='brightness(1.1)';"
+                onmouseout="this.style.transform='translateY(0) scale(1)';this.style.boxShadow='0 8px 20px rgba(212,175,55,.35)';this.style.filter='brightness(1)';">
+                Explore Collection
+            </a>
 
-</div>
+        </div>
 
 
-<!-- DOTS -->
-<div id="heroDots"
-style="position:absolute;bottom:28px;left:50%;
+        <!-- DOTS -->
+        <div id="heroDots" style="position:absolute;bottom:28px;left:50%;
 transform:translateX(-50%);
 display:flex;gap:12px;z-index:6;">
 
-<button data-index="0" style="width:12px;height:12px;border-radius:50%;border:none;background:white;"></button>
-<button data-index="1" style="width:12px;height:12px;border-radius:50%;border:none;background:rgba(255,255,255,.4);"></button>
-<button data-index="2" style="width:12px;height:12px;border-radius:50%;border:none;background:rgba(255,255,255,.4);"></button>
+            <button data-index="0"
+                style="width:12px;height:12px;border-radius:50%;border:none;background:white;"></button>
+            <button data-index="1"
+                style="width:12px;height:12px;border-radius:50%;border:none;background:rgba(255,255,255,.4);"></button>
+            <button data-index="2"
+                style="width:12px;height:12px;border-radius:50%;border:none;background:rgba(255,255,255,.4);"></button>
 
-</div>
+        </div>
 
-</section>
+    </section>
 
 
-<script>
-const slides = document.querySelectorAll(".hero-slide");
-const dots = document.querySelectorAll("#heroDots button");
-let index = 0;
+    <script>
+        const slides = document.querySelectorAll(".hero-slide");
+        const dots = document.querySelectorAll("#heroDots button");
+        let index = 0;
 
-function showSlide(i){
-slides.forEach((s,n)=>{
-s.style.opacity = n===i ? "1":"0";
-});
-dots.forEach((d,n)=>{
-d.style.background = n===i ? "white":"rgba(255,255,255,.4)";
-});
-index = i;
-}
+        function showSlide(i) {
+            slides.forEach((s, n) => {
+                s.style.opacity = n === i ? "1" : "0";
+            });
+            dots.forEach((d, n) => {
+                d.style.background = n === i ? "white" : "rgba(255,255,255,.4)";
+            });
+            index = i;
+        }
 
-function nextSlide(){
-index = (index+1) % slides.length;
-showSlide(index);
-}
+        function nextSlide() {
+            index = (index + 1) % slides.length;
+            showSlide(index);
+        }
 
-setInterval(nextSlide,3000);
+        setInterval(nextSlide, 3000);
 
-dots.forEach(dot=>{
-dot.onclick = ()=> showSlide(parseInt(dot.dataset.index));
-});
-</script>
+        dots.forEach(dot => {
+            dot.onclick = () => showSlide(parseInt(dot.dataset.index));
+        });
+    </script>
 
 
 
     <section style="padding:100px 0;background:#f6f4ef;width:100%;">
 
-<div style="
+        <div style="
 width:100%;
 display:grid;
 grid-template-columns:1.1fr 1fr 1fr;
@@ -562,8 +721,8 @@ padding:0 40px;
 box-sizing:border-box;
 ">
 
-<!-- LEFT PANEL -->
-<div style="
+            <!-- LEFT PANEL -->
+            <div style="
 background:#eee7df;
 padding:80px 60px;
 display:flex;
@@ -572,26 +731,26 @@ justify-content:center;
 min-height:560px;
 ">
 
-<h2 style="
+                <h2 style="
 font-family:Times New Roman,serif;
 font-size:48px;
 font-weight:500;
 margin-bottom:24px;
 color:#1a1a1a;">
-Latest Arrivals
-</h2>
+                    Latest Arrivals
+                </h2>
 
-<p style="
+                <p style="
 font-size:19px;
 line-height:1.75;
 color:#5b5b5b;
 margin-bottom:34px;
 max-width:520px;">
-Explore our latest arrivals, showcasing the most enchanting gold and diamond creations of the season.
-</p>
+                    Explore our latest arrivals, showcasing the most enchanting gold and diamond creations of the
+                    season.
+                </p>
 
-<a href="products.html"
-style="
+                <a href="products.html" style="
 display:inline-block;
 background:linear-gradient(135deg,#e6c35a,#b8962e);
 color:white;
@@ -605,55 +764,51 @@ text-transform:uppercase;
 box-shadow:0 8px 20px rgba(212,175,55,.35);
 width:max-content;
 transition:.3s;
-"
-onmouseover="this.style.filter='brightness(1.05)';this.style.transform='translateY(-3px)';"
-onmouseout="this.style.filter='brightness(1)';this.style.transform='translateY(0)';"
->
-DISCOVER MORE
-</a>
+" onmouseover="this.style.filter='brightness(1.05)';this.style.transform='translateY(-3px)';"
+                    onmouseout="this.style.filter='brightness(1)';this.style.transform='translateY(0)';">
+                    DISCOVER MORE
+                </a>
 
-</div>
+            </div>
 
 
-<!-- CENTER IMAGE -->
-<div style="
+            <!-- CENTER IMAGE -->
+            <div style="
 min-height:560px;
 border-radius:8px;
 background:url('https://i.pinimg.com/1200x/7d/70/02/7d70026bbb299ef3c8ad2bbebfdcf513.jpg') center/cover no-repeat;
 box-shadow:0 20px 60px rgba(0,0,0,.12);
 transition:transform .5s ease, box-shadow .5s ease;
 cursor:pointer;
-"
-onmouseover="this.style.transform='scale(1.08) translateY(-5px)';this.style.boxShadow='0 30px 60px rgba(212,175,55,.3)';"
-onmouseout="this.style.transform='scale(1) translateY(0)';this.style.boxShadow='0 20px 60px rgba(0,0,0,.12)';"
-></div>
+" onmouseover="this.style.transform='scale(1.08) translateY(-5px)';this.style.boxShadow='0 30px 60px rgba(212,175,55,.3)';"
+                onmouseout="this.style.transform='scale(1) translateY(0)';this.style.boxShadow='0 20px 60px rgba(0,0,0,.12)';">
+            </div>
 
 
-<!-- RIGHT IMAGE -->
-<div style="
+            <!-- RIGHT IMAGE -->
+            <div style="
 min-height:560px;
 border-radius:8px;
 background:url('https://i.pinimg.com/736x/56/fa/72/56fa7280ee1e4da4b9c8f6d2784f1d5d.jpg') center/cover no-repeat;
 box-shadow:0 20px 60px rgba(0,0,0,.12);
 transition:transform .5s ease, box-shadow .5s ease;
 cursor:pointer;
-"
-onmouseover="this.style.transform='scale(1.08) translateY(-5px)';this.style.boxShadow='0 30px 60px rgba(212,175,55,.3)';"
-onmouseout="this.style.transform='scale(1) translateY(0)';this.style.boxShadow='0 20px 60px rgba(0,0,0,.12)';"
-></div>
+" onmouseover="this.style.transform='scale(1.08) translateY(-5px)';this.style.boxShadow='0 30px 60px rgba(212,175,55,.3)';"
+                onmouseout="this.style.transform='scale(1) translateY(0)';this.style.boxShadow='0 20px 60px rgba(0,0,0,.12)';">
+            </div>
 
-</div>
-</section>
-<section style="padding:110px 40px; box-sizing:border-box; position:relative; overflow:hidden;">
+        </div>
+    </section>
+    <section style="padding:110px 40px; box-sizing:border-box; position:relative; overflow:hidden;">
 
-    <video id="bestSellersVideo" autoplay muted loop playsinline 
-        style="position:absolute; width:100%; height:100%; object-fit:cover; top:0; left:0; z-index:0;">
-        <source src="jewelry-bg.mp4" type="video/mp4">
-    </video>
+        <video id="bestSellersVideo" autoplay muted loop playsinline
+            style="position:absolute; width:100%; height:100%; object-fit:cover; top:0; left:0; z-index:0;">
+            <source src="jewelry-bg.mp4" type="video/mp4">
+        </video>
 
-    <div style="max-width:1400px; margin:auto; position:relative; z-index:2;">
+        <div style="max-width:1400px; margin:auto; position:relative; z-index:2;">
 
-        <h1 style="
+            <h1 style="
             font-family:'Playfair Display',serif;
             font-size:52px;
             font-weight:700;
@@ -663,10 +818,10 @@ onmouseout="this.style.transform='scale(1) translateY(0)';this.style.boxShadow='
             color:#ffffff;
             text-shadow:0 4px 15px rgba(0,0,0,0.8); 
         ">
-            Best Sellers
-        </h1>
+                Best Sellers
+            </h1>
 
-        <p style="
+            <p style="
             font-family:Montserrat,sans-serif;
             font-size:18px;
             color:#ffffff;
@@ -674,124 +829,140 @@ onmouseout="this.style.transform='scale(1) translateY(0)';this.style.boxShadow='
             margin-bottom:70px;
             text-shadow:0 2px 12px rgba(0,0,0,0.9);
         ">
-            Loved the most by our Luxe community.
-        </p>
+                Loved the most by our Luxe community.
+            </p>
 
-        <div id="bestSellersGrid" style="
+            <div id="bestSellersGrid" style="
             display:grid;
             grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
             gap:32px;
             width:100%;
         ">
 
-            <a href="products.html"
-            style="position:relative;height:420px;border-radius:18px;overflow:hidden;text-decoration:none;color:white;
+                <a href="products.html" style="position:relative;height:420px;border-radius:18px;overflow:hidden;text-decoration:none;color:white;
             background:url('https://www.fashionkida.com/cdn/shop/products/8089a5b75a96b71f7284db0cff8c0c70_800x.jpg?v=1677227423') center/cover no-repeat;
-            box-shadow:0 24px 60px rgba(0,0,0,.3);" 
-            onmouseover="this.children[0].style.transform='scale(1.08)'"
-            onmouseout="this.children[0].style.transform='scale(1)'">
+            box-shadow:0 24px 60px rgba(0,0,0,.3);" onmouseover="this.children[0].style.transform='scale(1.08)'"
+                    onmouseout="this.children[0].style.transform='scale(1)'">
 
-                <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
-                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);"></div>
+                    <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
+                    <div
+                        style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);">
+                    </div>
 
-                <div style="position:absolute;bottom:30px;left:28px;">
-                    <div style="font-family:'Playfair Display',serif;font-size:24px;text-shadow:0 4px 12px rgba(0,0,0,1);">Classic Gold Necklace</div>
-                    <div style="font-family:Montserrat,sans-serif;opacity:1;margin:6px 0 14px;text-shadow:0 4px 12px rgba(0,0,0,1); color:#e6c35a; font-weight:600;">Gold • Necklace</div>
-                    <div style="font-family:Montserrat,sans-serif;background:linear-gradient(135deg,#e6c35a,#b8962e);
+                    <div style="position:absolute;bottom:30px;left:28px;">
+                        <div
+                            style="font-family:'Playfair Display',serif;font-size:24px;text-shadow:0 4px 12px rgba(0,0,0,1);">
+                            Classic Gold Necklace</div>
+                        <div
+                            style="font-family:Montserrat,sans-serif;opacity:1;margin:6px 0 14px;text-shadow:0 4px 12px rgba(0,0,0,1); color:#e6c35a; font-weight:600;">
+                            Gold • Necklace</div>
+                        <div
+                            style="font-family:Montserrat,sans-serif;background:linear-gradient(135deg,#e6c35a,#b8962e);
                     padding:9px 20px;border-radius:24px;font-size:13px;font-weight:600;letter-spacing:.5px; color:#000;">
-                        View Product
+                            View Product
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
 
-            <a href="products.html"
-            style="position:relative;height:420px;border-radius:18px;overflow:hidden;text-decoration:none;color:white;
+                <a href="products.html" style="position:relative;height:420px;border-radius:18px;overflow:hidden;text-decoration:none;color:white;
             background:url('https://eragem.com/media/catalog/product/cache/1/image/17f82f742ffe127f42dca9de82fb58b1/2/4/24067a.jpg') center/cover no-repeat;
-            box-shadow:0 24px 60px rgba(0,0,0,.3);"
-            onmouseover="this.children[0].style.transform='scale(1.08)'"
-            onmouseout="this.children[0].style.transform='scale(1)'">
+            box-shadow:0 24px 60px rgba(0,0,0,.3);" onmouseover="this.children[0].style.transform='scale(1.08)'"
+                    onmouseout="this.children[0].style.transform='scale(1)'">
 
-                <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
-                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);"></div>
-
-                <div style="position:absolute;bottom:30px;left:28px;">
-                    <div style="font-family:'Playfair Display',serif;font-size:24px;text-shadow:0 4px 12px rgba(0,0,0,1);">Diamond Solitaire Ring</div>
-                    <div style="font-family:Montserrat,sans-serif;opacity:1;margin:6px 0 14px;text-shadow:0 4px 12px rgba(0,0,0,1); color:#e6c35a; font-weight:600;">Diamond • Ring</div>
-                    <div style="font-family:Montserrat,sans-serif;background:linear-gradient(135deg,#e6c35a,#b8962e);
-                    padding:9px 20px;border-radius:24px;font-size:13px;font-weight:600; color:#000;">
-                        View Product
+                    <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
+                    <div
+                        style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);">
                     </div>
-                </div>
-            </a>
 
-            <a href="products.html"
-            style="position:relative;height:420px;border-radius:18px;overflow:hidden;text-decoration:none;color:white;
+                    <div style="position:absolute;bottom:30px;left:28px;">
+                        <div
+                            style="font-family:'Playfair Display',serif;font-size:24px;text-shadow:0 4px 12px rgba(0,0,0,1);">
+                            Diamond Solitaire Ring</div>
+                        <div
+                            style="font-family:Montserrat,sans-serif;opacity:1;margin:6px 0 14px;text-shadow:0 4px 12px rgba(0,0,0,1); color:#e6c35a; font-weight:600;">
+                            Diamond • Ring</div>
+                        <div style="font-family:Montserrat,sans-serif;background:linear-gradient(135deg,#e6c35a,#b8962e);
+                    padding:9px 20px;border-radius:24px;font-size:13px;font-weight:600; color:#000;">
+                            View Product
+                        </div>
+                    </div>
+                </a>
+
+                <a href="products.html" style="position:relative;height:420px;border-radius:18px;overflow:hidden;text-decoration:none;color:white;
             background:url('https://images.pexels.com/photos/265906/pexels-photo-265906.jpeg?auto=compress&cs=tinysrgb&w=800') center/cover no-repeat;
-            box-shadow:0 24px 60px rgba(0,0,0,.3);"
-            onmouseover="this.children[0].style.transform='scale(1.08)'"
-            onmouseout="this.children[0].style.transform='scale(1)'">
+            box-shadow:0 24px 60px rgba(0,0,0,.3);" onmouseover="this.children[0].style.transform='scale(1.08)'"
+                    onmouseout="this.children[0].style.transform='scale(1)'">
 
-                <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
-                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);"></div>
-
-                <div style="position:absolute;bottom:30px;left:28px;">
-                    <div style="font-family:'Playfair Display',serif;font-size:24px;text-shadow:0 4px 12px rgba(0,0,0,1);">Gold Earrings</div>
-                    <div style="font-family:Montserrat,sans-serif;opacity:1;margin:6px 0 14px;text-shadow:0 4px 12px rgba(0,0,0,1); color:#e6c35a; font-weight:600;">Gold • Earrings</div>
-                    <div style="font-family:Montserrat,sans-serif;background:linear-gradient(135deg,#e6c35a,#b8962e);
-                    padding:9px 20px;border-radius:24px;font-size:13px;font-weight:600; color:#000;">
-                        View Product
+                    <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
+                    <div
+                        style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);">
                     </div>
-                </div>
-            </a>
 
-            <a href="products.html"
-            style="position:relative;height:420px;border-radius:18px;overflow:hidden;text-decoration:none;color:white;
+                    <div style="position:absolute;bottom:30px;left:28px;">
+                        <div
+                            style="font-family:'Playfair Display',serif;font-size:24px;text-shadow:0 4px 12px rgba(0,0,0,1);">
+                            Gold Earrings</div>
+                        <div
+                            style="font-family:Montserrat,sans-serif;opacity:1;margin:6px 0 14px;text-shadow:0 4px 12px rgba(0,0,0,1); color:#e6c35a; font-weight:600;">
+                            Gold • Earrings</div>
+                        <div style="font-family:Montserrat,sans-serif;background:linear-gradient(135deg,#e6c35a,#b8962e);
+                    padding:9px 20px;border-radius:24px;font-size:13px;font-weight:600; color:#000;">
+                            View Product
+                        </div>
+                    </div>
+                </a>
+
+                <a href="products.html" style="position:relative;height:420px;border-radius:18px;overflow:hidden;text-decoration:none;color:white;
             background:url('https://i.etsystatic.com/26291759/r/il/d0a04b/2751879621/il_794xN.2751879621_qz1u.jpg') center/cover no-repeat;
-            box-shadow:0 24px 60px rgba(0,0,0,.3);"
-            onmouseover="this.children[0].style.transform='scale(1.08)'"
-            onmouseout="this.children[0].style.transform='scale(1)'">
+            box-shadow:0 24px 60px rgba(0,0,0,.3);" onmouseover="this.children[0].style.transform='scale(1.08)'"
+                    onmouseout="this.children[0].style.transform='scale(1)'">
 
-                <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
-                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);"></div>
-
-                <div style="position:absolute;bottom:30px;left:28px;">
-                    <div style="font-family:'Playfair Display',serif;font-size:24px;text-shadow:0 4px 12px rgba(0,0,0,1);">24K Gold Bangle</div>
-                    <div style="font-family:Montserrat,sans-serif;opacity:1;margin:6px 0 14px;text-shadow:0 4px 12px rgba(0,0,0,1); color:#e6c35a; font-weight:600;">Gold • Bangle</div>
-                    <div style="font-family:Montserrat,sans-serif;background:linear-gradient(135deg,#e6c35a,#b8962e);
-                    padding:9px 20px;border-radius:24px;font-size:13px;font-weight:600; color:#000;">
-                        View Product
+                    <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
+                    <div
+                        style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);">
                     </div>
-                </div>
-            </a>
 
+                    <div style="position:absolute;bottom:30px;left:28px;">
+                        <div
+                            style="font-family:'Playfair Display',serif;font-size:24px;text-shadow:0 4px 12px rgba(0,0,0,1);">
+                            24K Gold Bangle</div>
+                        <div
+                            style="font-family:Montserrat,sans-serif;opacity:1;margin:6px 0 14px;text-shadow:0 4px 12px rgba(0,0,0,1); color:#e6c35a; font-weight:600;">
+                            Gold • Bangle</div>
+                        <div style="font-family:Montserrat,sans-serif;background:linear-gradient(135deg,#e6c35a,#b8962e);
+                    padding:9px 20px;border-radius:24px;font-size:13px;font-weight:600; color:#000;">
+                            View Product
+                        </div>
+                    </div>
+                </a>
+
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-   <section style="width:100%;padding:120px 50px;background:#e5dac9;box-sizing:border-box;">
+    <section style="width:100%;padding:120px 50px;background:#e5dac9;box-sizing:border-box;">
 
-<!-- TITLE -->
-<div style="text-align:center;margin-bottom:70px;">
-  <h2 style="font-family:Times New Roman,serif;font-size:50px;font-weight:500;margin:0;">
-    Shop By Category
-  </h2>
-  <p style="margin-top:16px;font-size:19px;color:#666;">
-    Discover pieces tailored to your style.
-  </p>
-</div>
+        <!-- TITLE -->
+        <div style="text-align:center;margin-bottom:70px;">
+            <h2 style="font-family:Times New Roman,serif;font-size:50px;font-weight:500;margin:0;">
+                Shop By Category
+            </h2>
+            <p style="margin-top:16px;font-size:19px;color:#666;">
+                Discover pieces tailored to your style.
+            </p>
+        </div>
 
 
-<!-- GRID -->
-<div style="
+        <!-- GRID -->
+        <div style="
 display:grid;
 grid-template-columns:repeat(5, minmax(260px,1fr));
 gap:30px;
 width:100%;
 ">
 
-<!-- CARD 1 -->
-<a href="products.html?category=Rings"
-style="
+            <!-- CARD 1 -->
+            <a href="products.html?category=Rings" style="
 position:relative;
 height:420px;
 border-radius:16px;
@@ -801,144 +972,156 @@ color:white;
 background:url('https://i.pinimg.com/736x/1b/c2/11/1bc2119a22c2597cba77c3497314564c.jpg') center/cover no-repeat;
 box-shadow:0 24px 60px rgba(0,0,0,.15);
 transition:.5s;
-"
-onmouseover="this.children[0].style.transform='scale(1.08)'"
-onmouseout="this.children[0].style.transform='scale(1)'"
->
+" onmouseover="this.children[0].style.transform='scale(1.08)'"
+                onmouseout="this.children[0].style.transform='scale(1)'">
 
-<div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
-<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);"></div>
+                <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);">
+                </div>
 
-<div style="position:absolute;bottom:28px;left:28px;">
-<div style="font-size:24px;font-weight:600;margin-bottom:12px;">Rings</div>
-<div style="background:linear-gradient(135deg,#e6c35a,#b8962e);color:white;padding:9px 18px;border-radius:22px;font-size:13px;font-weight:600;box-shadow:0 8px 20px rgba(212,175,55,.35);">
-View Collection
-</div>
-</div>
+                <div style="position:absolute;bottom:28px;left:28px;">
+                    <div style="font-size:24px;font-weight:600;margin-bottom:12px;">Rings</div>
+                    <div
+                        style="background:linear-gradient(135deg,#e6c35a,#b8962e);color:white;padding:9px 18px;border-radius:22px;font-size:13px;font-weight:600;box-shadow:0 8px 20px rgba(212,175,55,.35);">
+                        View Collection
+                    </div>
+                </div>
 
-</a>
-
-
-<!-- CARD 2 -->
-<a href="products.html?category=Braceltes"
-style="position:relative;height:420px;border-radius:16px;overflow:hidden;text-decoration:none;color:white;background:url('https://i.pinimg.com/1200x/80/1c/ca/801cca9d42a915ceceaee4cb105c60f0.jpg') center/cover no-repeat;box-shadow:0 24px 60px rgba(0,0,0,.15);transition:.5s;"
-onmouseover="this.children[0].style.transform='scale(1.08)'"
-onmouseout="this.children[0].style.transform='scale(1)'">
-<div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
-<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);"></div>
-<div style="position:absolute;bottom:28px;left:28px;">
-<div style="font-size:24px;font-weight:600;margin-bottom:12px;">Bracelet</div>
-<div style="background:linear-gradient(135deg,#e6c35a,#b8962e);color:white;padding:9px 18px;border-radius:22px;font-size:13px;font-weight:600;box-shadow:0 8px 20px rgba(212,175,55,.35);">
-View Collection
-</div>
-</div>
-</a>
+            </a>
 
 
-<!-- CARD 3 -->
-<a href="products.html?category=Necklaces"
-style="position:relative;height:420px;border-radius:16px;overflow:hidden;text-decoration:none;color:white;background:url('https://i.pinimg.com/736x/3c/a0/9f/3ca09f498aa66a815a0378973d3e5348.jpg') center/cover no-repeat;box-shadow:0 24px 60px rgba(0,0,0,.15);"
-onmouseover="this.children[0].style.transform='scale(1.08)'"
-onmouseout="this.children[0].style.transform='scale(1)'">
-<div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
-<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);"></div>
-<div style="position:absolute;bottom:28px;left:28px;">
-<div style="font-size:24px;font-weight:600;margin-bottom:12px;">Necklaces</div>
-<div style="background:linear-gradient(135deg,#e6c35a,#b8962e);color:white;padding:9px 18px;border-radius:22px;font-size:13px;font-weight:600;box-shadow:0 8px 20px rgba(212,175,55,.35);">
-View Collection
-</div>
-</div>
-</a>
+            <!-- CARD 2 -->
+            <a href="products.html?category=Braceltes"
+                style="position:relative;height:420px;border-radius:16px;overflow:hidden;text-decoration:none;color:white;background:url('https://i.pinimg.com/1200x/80/1c/ca/801cca9d42a915ceceaee4cb105c60f0.jpg') center/cover no-repeat;box-shadow:0 24px 60px rgba(0,0,0,.15);transition:.5s;"
+                onmouseover="this.children[0].style.transform='scale(1.08)'"
+                onmouseout="this.children[0].style.transform='scale(1)'">
+                <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);">
+                </div>
+                <div style="position:absolute;bottom:28px;left:28px;">
+                    <div style="font-size:24px;font-weight:600;margin-bottom:12px;">Bracelet</div>
+                    <div
+                        style="background:linear-gradient(135deg,#e6c35a,#b8962e);color:white;padding:9px 18px;border-radius:22px;font-size:13px;font-weight:600;box-shadow:0 8px 20px rgba(212,175,55,.35);">
+                        View Collection
+                    </div>
+                </div>
+            </a>
 
 
-<!-- CARD 4 -->
-<a href="products.html?category=Earrings"
-style="position:relative;height:420px;border-radius:16px;overflow:hidden;text-decoration:none;color:white;background:url('https://i.pinimg.com/736x/32/a4/03/32a403b437ae32f7fa682253c028b931.jpg') center/cover no-repeat;box-shadow:0 24px 60px rgba(0,0,0,.15);"
-onmouseover="this.children[0].style.transform='scale(1.08)'"
-onmouseout="this.children[0].style.transform='scale(1)'">
-<div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
-<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);"></div>
-<div style="position:absolute;bottom:28px;left:28px;">
-<div style="font-size:24px;font-weight:600;margin-bottom:12px;">Earrings</div>
-<div style="background:linear-gradient(135deg,#e6c35a,#b8962e);color:white;padding:9px 18px;border-radius:22px;font-size:13px;font-weight:600;box-shadow:0 8px 20px rgba(212,175,55,.35);">
-View Collection
-</div>
-</div>
-</a>
+            <!-- CARD 3 -->
+            <a href="products.html?category=Necklaces"
+                style="position:relative;height:420px;border-radius:16px;overflow:hidden;text-decoration:none;color:white;background:url('https://i.pinimg.com/736x/3c/a0/9f/3ca09f498aa66a815a0378973d3e5348.jpg') center/cover no-repeat;box-shadow:0 24px 60px rgba(0,0,0,.15);"
+                onmouseover="this.children[0].style.transform='scale(1.08)'"
+                onmouseout="this.children[0].style.transform='scale(1)'">
+                <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);">
+                </div>
+                <div style="position:absolute;bottom:28px;left:28px;">
+                    <div style="font-size:24px;font-weight:600;margin-bottom:12px;">Necklaces</div>
+                    <div
+                        style="background:linear-gradient(135deg,#e6c35a,#b8962e);color:white;padding:9px 18px;border-radius:22px;font-size:13px;font-weight:600;box-shadow:0 8px 20px rgba(212,175,55,.35);">
+                        View Collection
+                    </div>
+                </div>
+            </a>
 
 
-<!-- CARD 5 -->
-<a href="products.html?category=Watch"
-style="position:relative;height:420px;border-radius:16px;overflow:hidden;text-decoration:none;color:white;background:url('https://i.pinimg.com/1200x/0f/2d/fe/0f2dfea129eabd9e5c83981b14d6de71.jpg') center/cover no-repeat;box-shadow:0 24px 60px rgba(0,0,0,.15);"
-onmouseover="this.children[0].style.transform='scale(1.08)'"
-onmouseout="this.children[0].style.transform='scale(1)'">
-<div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
-<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);"></div>
-<div style="position:absolute;bottom:28px;left:28px;">
-<div style="font-size:24px;font-weight:600;margin-bottom:12px;">Watch</div>
-<div style="background:linear-gradient(135deg,#e6c35a,#b8962e);color:white;padding:9px 18px;border-radius:22px;font-size:13px;font-weight:600;box-shadow:0 8px 20px rgba(212,175,55,.35);">
-View Collection
-</div>
-</div>
-</a>
+            <!-- CARD 4 -->
+            <a href="products.html?category=Earrings"
+                style="position:relative;height:420px;border-radius:16px;overflow:hidden;text-decoration:none;color:white;background:url('https://i.pinimg.com/736x/32/a4/03/32a403b437ae32f7fa682253c028b931.jpg') center/cover no-repeat;box-shadow:0 24px 60px rgba(0,0,0,.15);"
+                onmouseover="this.children[0].style.transform='scale(1.08)'"
+                onmouseout="this.children[0].style.transform='scale(1)'">
+                <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);">
+                </div>
+                <div style="position:absolute;bottom:28px;left:28px;">
+                    <div style="font-size:24px;font-weight:600;margin-bottom:12px;">Earrings</div>
+                    <div
+                        style="background:linear-gradient(135deg,#e6c35a,#b8962e);color:white;padding:9px 18px;border-radius:22px;font-size:13px;font-weight:600;box-shadow:0 8px 20px rgba(212,175,55,.35);">
+                        View Collection
+                    </div>
+                </div>
+            </a>
 
-</div>
-</section>
-<!-- Trending Now — Exact Best Seller Card Style -->
-<section style="padding:110px 40px;background:#f5efe6;box-sizing:border-box;">
 
-<div style="max-width:1400px;margin:auto;">
+            <!-- CARD 5 -->
+            <a href="products.html?category=Watch"
+                style="position:relative;height:420px;border-radius:16px;overflow:hidden;text-decoration:none;color:white;background:url('https://i.pinimg.com/1200x/0f/2d/fe/0f2dfea129eabd9e5c83981b14d6de71.jpg') center/cover no-repeat;box-shadow:0 24px 60px rgba(0,0,0,.15);"
+                onmouseover="this.children[0].style.transform='scale(1.08)'"
+                onmouseout="this.children[0].style.transform='scale(1)'">
+                <div style="position:absolute;inset:0;background:inherit;transition:transform 1.2s;"></div>
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);">
+                </div>
+                <div style="position:absolute;bottom:28px;left:28px;">
+                    <div style="font-size:24px;font-weight:600;margin-bottom:12px;">Watch</div>
+                    <div
+                        style="background:linear-gradient(135deg,#e6c35a,#b8962e);color:white;padding:9px 18px;border-radius:22px;font-size:13px;font-weight:600;box-shadow:0 8px 20px rgba(212,175,55,.35);">
+                        View Collection
+                    </div>
+                </div>
+            </a>
 
-<h2 style="
+        </div>
+    </section>
+    <!-- Trending Now — Exact Best Seller Card Style -->
+    <section style="padding:110px 40px;background:#f5efe6;box-sizing:border-box;">
+
+        <div style="max-width:1400px;margin:auto;">
+
+            <h2 style="
 font-family:'Playfair Display',serif;
 font-size:52px;
 font-weight:500;
 letter-spacing:.5px;
 margin:0 0 14px 0;
 text-align:center;">
-Trending Now
-</h2>
+                Trending Now
+            </h2>
 
-<p style="
+            <p style="
 font-family:Montserrat,sans-serif;
 font-size:18px;
 color:#6f6b66;
 text-align:center;
 margin-bottom:70px;">
-Handpicked favourites, updated in real-time from our catalogue.
-</p>
+                Handpicked favourites, updated in real-time from our catalogue.
+            </p>
 
-<!-- keep same id for backend JS -->
-<div id="featuredProducts" class="products-grid"></div>
-<style>
-#featuredProducts .product-image{background:transparent !important}
-#featuredProducts .product-image img{display:block}
-</style>
+            <!-- keep same id for backend JS -->
+            <div id="featuredProducts" class="products-grid"></div>
+            <style>
+                #featuredProducts .product-image {
+                    background: transparent !important
+                }
 
-</div>
-</section>
+                #featuredProducts .product-image img {
+                    display: block
+                }
+            </style>
+
+        </div>
+    </section>
 
 
- 
 
 
- 
 
-<section style="
+
+
+    <section style="
 position:relative;
 width:100%;
 height:100vh;
 overflow:hidden;
 ">
 
-<!-- VIDEO -->
-<video autoplay muted loop playsinline
-style="position:absolute;width:100%;height:100%;object-fit:cover;">
-  <source src="videos/6641566-uhd_4096_2160_25fps.mp4" type="video/mp4">
-</video>
+        <!-- VIDEO -->
+        <video autoplay muted loop playsinline style="position:absolute;width:100%;height:100%;object-fit:cover;">
+            <source src="videos/6641566-uhd_4096_2160_25fps.mp4" type="video/mp4">
+        </video>
 
-<!-- luxury overlay -->
-<div style="
+        <!-- luxury overlay -->
+        <div style="
 position:absolute;
 inset:0;
 background:linear-gradient(
@@ -949,8 +1132,8 @@ rgba(0,0,0,.45)
 "></div>
 
 
-<!-- CONTENT — RIGHT ALIGNED -->
-<div style="
+        <!-- CONTENT — RIGHT ALIGNED -->
+        <div style="
 position:relative;
 z-index:2;
 height:100%;
@@ -963,35 +1146,34 @@ padding:40px 80px;
 box-sizing:border-box;
 ">
 
-<div style="max-width:640px;">
+            <div style="max-width:640px;">
 
-<p style="
+                <p style="
 letter-spacing:3px;
 font-size:13px;
 text-transform:uppercase;
 opacity:.95;">
-Gift With Confidence
-</p>
+                    Gift With Confidence
+                </p>
 
-<h2 style="
+                <h2 style="
 font-family:Times New Roman,serif;
 font-size:52px;
 font-weight:500;
 margin:16px 0;
 text-shadow:0 10px 30px rgba(0,0,0,.5);">
-A Lifetime of Sparkle
-</h2>
+                    A Lifetime of Sparkle
+                </h2>
 
-<p style="
+                <p style="
 font-size:20px;
 line-height:1.7;
 opacity:.95;
 text-shadow:0 4px 18px rgba(0,0,0,.4);">
-Certified jewellery • Secure checkout • Quality guaranteed craftsmanship.
-</p>
+                    Certified jewellery • Secure checkout • Quality guaranteed craftsmanship.
+                </p>
 
-<a href="products.html"
-style="
+                <a href="products.html" style="
 display:inline-block;
 margin-top:28px;
 background:linear-gradient(135deg,#e6c35a,#b8962e);
@@ -1003,39 +1185,38 @@ font-weight:600;
 letter-spacing:.5px;
 box-shadow:0 12px 34px rgba(212,175,55,.35);
 ">
-Explore Gifts
-</a>
+                    Explore Gifts
+                </a>
 
-<div style="
+                <div style="
 margin-top:26px;
 font-size:14px;
 opacity:.9;">
-✔ Certified Purity &nbsp; • &nbsp; ✔ Secure Payments &nbsp; • &nbsp; ✔ Trusted Craftsmanship
-</div>
+                    ✔ Certified Purity &nbsp; • &nbsp; ✔ Secure Payments &nbsp; • &nbsp; ✔ Trusted Craftsmanship
+                </div>
 
-</div>
-</div>
+            </div>
+        </div>
 
-</section>
+    </section>
 
 
-    
 
-   <section style="width:100%;background:#f3ede4;overflow:hidden;">
 
-<div style="display:grid;grid-template-columns:1fr 1.2fr;width:100%;min-height:560px;">
+    <section style="width:100%;background:#f3ede4;overflow:hidden;">
 
-<!-- LEFT IMAGE -->
-<div id="testiImg"
-style="
+        <div style="display:grid;grid-template-columns:1fr 1.2fr;width:100%;min-height:560px;">
+
+            <!-- LEFT IMAGE -->
+            <div id="testiImg" style="
 background:url('YOUR_TESTI_IMG1.jpg') center/cover no-repeat;
 min-height:560px;
 transition:background 1s ease;
 "></div>
 
 
-<!-- RIGHT PANEL -->
-<div style="
+            <!-- RIGHT PANEL -->
+            <div style="
 display:flex;
 flex-direction:column;
 justify-content:center;
@@ -1045,101 +1226,99 @@ padding:90px 80px;
 position:relative;
 ">
 
-<h2 style="
+                <h2 style="
 font-family:Times New Roman,serif;
 font-size:46px;
 font-weight:500;
 margin-bottom:26px;
 color:#1a1a1a;">
-Testimonials
-</h2>
+                    Testimonials
+                </h2>
 
-<p id="testiText"
-style="
+                <p id="testiText" style="
 font-size:19px;
 line-height:1.9;
 color:#555;
 max-width:760px;
 margin-bottom:30px;
 transition:opacity .4s;">
-</p>
+                </p>
 
-<div style="font-size:20px;color:#c9a227;margin-bottom:14px;">★★★★★</div>
+                <div style="font-size:20px;color:#c9a227;margin-bottom:14px;">★★★★★</div>
 
-<p id="testiAuthor"
-style="font-size:18px;color:#222;margin-bottom:26px;">
-</p>
+                <p id="testiAuthor" style="font-size:18px;color:#222;margin-bottom:26px;">
+                </p>
 
-<!-- progress bars -->
-<div style="display:flex;gap:10px;">
-<div class="tbar" style="width:46px;height:4px;background:#2f3559;border-radius:3px;"></div>
-<div class="tbar" style="width:28px;height:4px;background:#cfcfd6;border-radius:3px;"></div>
-<div class="tbar" style="width:28px;height:4px;background:#cfcfd6;border-radius:3px;"></div>
-</div>
+                <!-- progress bars -->
+                <div style="display:flex;gap:10px;">
+                    <div class="tbar" style="width:46px;height:4px;background:#2f3559;border-radius:3px;"></div>
+                    <div class="tbar" style="width:28px;height:4px;background:#cfcfd6;border-radius:3px;"></div>
+                    <div class="tbar" style="width:28px;height:4px;background:#cfcfd6;border-radius:3px;"></div>
+                </div>
 
-</div>
-</div>
-</section>
-
+            </div>
+        </div>
+    </section>
 
 
-<script>
-const testiData = [
-{
-img: "https://i.pinimg.com/736x/d9/50/81/d95081854b091c9a4ce1536a1c817a44.jpg",
-text: `I was honestly hesitant ordering fine jewellery online, but this turned out to be one of my best purchase experiences. The piece looked exactly like the photos with perfect shine and detailing. The packaging was secure and premium, and certification details gave complete confidence. Checkout was smooth, delivery updates were timely, and the jewellery feels truly luxurious when worn. I’ve already received many compliments and will definitely order again.`,
-author: "Nirzara kulkarni — Gold Necklace"
-},
 
-{
-img: "https://i.pinimg.com/736x/7f/5c/fc/7f5cfcb61110ffe4037f2da423c45dab.jpg",
-text: `The craftsmanship and finishing exceeded my expectations. What impressed me most was how accurately the product matched the images and description. Secure payment options and tracking made the entire process stress-free. The box presentation was elegant — perfect for gifting. This is one of the few online jewellery stores I genuinely trust now.`,
-author: "Ayesha Iyer — Gold Earrings"
-},
+    <script>
+        const testiData = [
+            {
+                img: "https://i.pinimg.com/736x/d9/50/81/d95081854b091c9a4ce1536a1c817a44.jpg",
+                text: `I was honestly hesitant ordering fine jewellery online, but this turned out to be one of my best purchase experiences. The piece looked exactly like the photos with perfect shine and detailing. The packaging was secure and premium, and certification details gave complete confidence. Checkout was smooth, delivery updates were timely, and the jewellery feels truly luxurious when worn. I’ve already received many compliments and will definitely order again.`,
+                author: "Nirzara kulkarni — Gold Necklace"
+            },
 
-{
-img: "https://i.pinimg.com/736x/df/bf/3c/dfbf3caacf5b5e95a8605f567d0d7748.jpg",
-text: `From browsing to delivery, the entire experience felt premium. Product authenticity certificates, careful packaging, and on-time shipping built strong trust. The jewellery quality is excellent and comfortable for daily wear as well as occasions. If you want reliable, certified jewellery online, this platform is absolutely worth it.`,
-author: "Giva Arrora — Watch"
-}
-];
+            {
+                img: "https://i.pinimg.com/736x/7f/5c/fc/7f5cfcb61110ffe4037f2da423c45dab.jpg",
+                text: `The craftsmanship and finishing exceeded my expectations. What impressed me most was how accurately the product matched the images and description. Secure payment options and tracking made the entire process stress-free. The box presentation was elegant — perfect for gifting. This is one of the few online jewellery stores I genuinely trust now.`,
+                author: "Ayesha Iyer — Gold Earrings"
+            },
 
-let ti = 0;
-const textEl = document.getElementById("testiText");
-const authorEl = document.getElementById("testiAuthor");
-const imgEl = document.getElementById("testiImg");
-const bars = document.querySelectorAll(".tbar");
+            {
+                img: "https://i.pinimg.com/736x/df/bf/3c/dfbf3caacf5b5e95a8605f567d0d7748.jpg",
+                text: `From browsing to delivery, the entire experience felt premium. Product authenticity certificates, careful packaging, and on-time shipping built strong trust. The jewellery quality is excellent and comfortable for daily wear as well as occasions. If you want reliable, certified jewellery online, this platform is absolutely worth it.`,
+                author: "Giva Arrora — Watch"
+            }
+        ];
 
-function showTesti(i){
-textEl.style.opacity = 0;
-authorEl.style.opacity = 0;
+        let ti = 0;
+        const textEl = document.getElementById("testiText");
+        const authorEl = document.getElementById("testiAuthor");
+        const imgEl = document.getElementById("testiImg");
+        const bars = document.querySelectorAll(".tbar");
 
-setTimeout(()=>{
-textEl.innerText = testiData[i].text;
-authorEl.innerText = testiData[i].author;
-imgEl.style.backgroundImage = `url('${testiData[i].img}')`;
+        function showTesti(i) {
+            textEl.style.opacity = 0;
+            authorEl.style.opacity = 0;
 
-bars.forEach((b,n)=>{
-b.style.background = n===i ? "#2f3559" : "#cfcfd6";
-b.style.width = n===i ? "46px":"28px";
-});
+            setTimeout(() => {
+                textEl.innerText = testiData[i].text;
+                authorEl.innerText = testiData[i].author;
+                imgEl.style.backgroundImage = `url('${testiData[i].img}')`;
 
-textEl.style.opacity = 1;
-authorEl.style.opacity = 1;
-},300);
-}
+                bars.forEach((b, n) => {
+                    b.style.background = n === i ? "#2f3559" : "#cfcfd6";
+                    b.style.width = n === i ? "46px" : "28px";
+                });
 
-function nextTesti(){
-ti = (ti+1) % testiData.length;
-showTesti(ti);
-}
+                textEl.style.opacity = 1;
+                authorEl.style.opacity = 1;
+            }, 300);
+        }
 
-showTesti(0);
-setInterval(nextTesti, 5000);
-</script>
+        function nextTesti() {
+            ti = (ti + 1) % testiData.length;
+            showTesti(ti);
+        }
+
+        showTesti(0);
+        setInterval(nextTesti, 5000);
+    </script>
 
 
-  <section style="
+    <section style="
 width:100%;
 background:#f5f5f5;
 padding:95px 40px;
@@ -1148,7 +1327,7 @@ position:relative;
 overflow:hidden;
 ">
 
-<h2 style="
+        <h2 style="
 text-align:center;
 font-family:Times New Roman,serif;
 font-size:46px;
@@ -1156,11 +1335,11 @@ font-weight:500;
 margin:0 0 65px 0;
 color:#1a1a1a;
 letter-spacing:.5px;">
-Luxe Assurance
-</h2>
+            Luxe Assurance
+        </h2>
 
 
-<div style="
+        <div style="
 display:grid;
 grid-template-columns:repeat(6,1fr);
 gap:34px;
@@ -1168,234 +1347,782 @@ text-align:center;
 align-items:start;
 ">
 
-<!-- ITEM -->
-<div>
-<div style="font-size:44px;color:#24304f;margin-bottom:16px;">◎</div>
-<div style="font-size:18px;line-height:1.4;">Assured Lifetime<br>Maintenance</div>
-</div>
+            <!-- ITEM -->
+            <div>
+                <div style="font-size:44px;color:#24304f;margin-bottom:16px;">◎</div>
+                <div style="font-size:18px;line-height:1.4;">Assured Lifetime<br>Maintenance</div>
+            </div>
 
-<div>
-<div style="font-size:44px;color:#24304f;margin-bottom:16px;">↻</div>
-<div style="font-size:18px;">Easy Exchange</div>
-</div>
+            <div>
+                <div style="font-size:44px;color:#24304f;margin-bottom:16px;">↻</div>
+                <div style="font-size:18px;">Easy Exchange</div>
+            </div>
 
-<div>
-<div style="font-size:44px;color:#24304f;margin-bottom:16px;">⌁</div>
-<div style="font-size:18px;">14-Day Return Policy</div>
-</div>
+            <div>
+                <div style="font-size:44px;color:#24304f;margin-bottom:16px;">⌁</div>
+                <div style="font-size:18px;">14-Day Return Policy</div>
+            </div>
 
-<div>
-<div style="font-size:44px;color:#24304f;margin-bottom:16px;">◇</div>
-<div style="font-size:18px;line-height:1.4;">Tested & Certified<br>Diamonds</div>
-</div>
+            <div>
+                <div style="font-size:44px;color:#24304f;margin-bottom:16px;">◇</div>
+                <div style="font-size:18px;line-height:1.4;">Tested & Certified<br>Diamonds</div>
+            </div>
 
-<div>
-<div style="font-size:40px;color:#24304f;margin-bottom:16px;font-weight:600;">0%</div>
-<div style="font-size:18px;">On Gold Exchange</div>
-</div>
+            <div>
+                <div style="font-size:40px;color:#24304f;margin-bottom:16px;font-weight:600;">0%</div>
+                <div style="font-size:18px;">On Gold Exchange</div>
+            </div>
 
-<div>
-<div style="font-size:44px;color:#24304f;margin-bottom:16px;">⟲</div>
-<div style="font-size:18px;">Guaranteed Buyback</div>
-</div>
+            <div>
+                <div style="font-size:44px;color:#24304f;margin-bottom:16px;">⟲</div>
+                <div style="font-size:18px;">Guaranteed Buyback</div>
+            </div>
 
-</div>
+        </div>
 
 
 
-</section>
+    </section>
 
-    
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@400;700&display=swap');
-        :root{--lux-gold:#D4AF37;--lux-black:#0b0b0b;--lux-gray:#8a8680;--lux-white:#ffffff;--lux-beige:#faf6ef;--lux-navy:#0e2a4f}
-        body{background:#000}
-        .utility-bar{background:#f7f7fb;color:#333;display:flex;justify-content:space-between;align-items:center;padding:6px 20px;font-family:Montserrat,sans-serif;font-size:.9rem}
-        .utility-bar a{color:#333;text-decoration:none;margin-right:16px}
-        .sr{opacity:0;transform:translateY(24px);transition:all .6s cubic-bezier(0.16,1,0.3,1)}
-        .sr.reveal{opacity:1;transform:translateY(0)}
-        .hero-slider{position:relative;height:100vh;min-height:560px;background:#000;color:#fff;overflow:hidden}
-        .hero-slides{position:absolute;inset:0}
-        .hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .6s cubic-bezier(0.16,1,0.3,1)}
-        .hero-slide.active{opacity:1}
-        .hero-video{width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(1.05)}
-        .hero-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px}
-        .hero-eyebrow{letter-spacing:.4em;text-transform:uppercase;color:var(--lux-gold);font-family:Montserrat,sans-serif;font-size:clamp(.7rem,1.16vw,.95rem);margin-bottom:16px}
-        .hero-heading{font-family:'Playfair Display',serif;font-weight:400;letter-spacing:-.01em;font-size:clamp(2.4rem,6vw,5rem);line-height:1.08;margin-bottom:14px}
-        .hero-copy{font-family:Montserrat,sans-serif;color:#dad7d2;font-size:clamp(1rem,1.4vw,1.2rem);letter-spacing:.02em;margin-bottom:28px}
-        .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
-        .cta-primary{
-            display:inline-block;
-            background:linear-gradient(135deg,#e6c35a,#b8962e);
-            color:#fff;
-            padding:9px 20px;
-            border-radius:24px;
-            text-decoration:none;
-            font-family:Montserrat,sans-serif;
-            font-weight:600;
-            letter-spacing:.05em;
-            text-transform:uppercase;
-            box-shadow:0 8px 20px rgba(212,175,55,.35);
-            cursor:pointer;
-            transition:.3s;
+
+        :root {
+            --lux-gold: #D4AF37;
+            --lux-black: #0b0b0b;
+            --lux-gray: #8a8680;
+            --lux-white: #ffffff;
+            --lux-beige: #faf6ef;
+            --lux-navy: #0e2a4f
         }
-        .cta-primary:hover{
-            filter:brightness(1.05);
-            transform:translateY(-3px);
+
+        body {
+            background: #000
         }
-        .hero-dots{position:absolute;left:0;right:0;bottom:24px;display:flex;gap:8px;justify-content:center}
-        .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);border:none;cursor:pointer;transition:.3s}
-        .dot.active{background:#fff}
-        .lux-title{font-family:'Playfair Display',serif;font-weight:400;color:#fff;font-size:clamp(1.8rem,3.5vw,2.6rem);letter-spacing:.02em;text-align:center;margin:56px 0 8px}
-        .lux-title.dark{color:#111}
-        .lux-subtitle{font-family:Montserrat,sans-serif;color:#bdb9b4;font-size:clamp(.95rem,1.4vw,1.1rem);text-align:center;margin-bottom:28px}
-        .lux-subtitle.dark{color:#6f6b66}
-        .latest-arrivals{background:var(--lux-beige);padding:48px 0}
-        .la-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:24px;align-items:center}
-        .la-left{text-align:left;background:#fff;border:1px solid #ece9e1;border-radius:16px;padding:28px}
-        .la-title{font-family:'Playfair Display',serif;font-weight:400;color:#111;font-size:clamp(1.9rem,3vw,2.4rem)}
-        .la-copy{font-family:Montserrat,sans-serif;color:#6f6b66;font-size:clamp(1rem,1.3vw,1.15rem);margin:10px 0 16px}
-        .la-cta{
-            display:inline-block;
-            background:linear-gradient(135deg,#e6c35a,#b8962e);
-            color:#fff;
-            padding:9px 20px;
-            border-radius:24px;
-            text-decoration:none;
-            font-family:Montserrat,sans-serif;
-            font-weight:600;
-            letter-spacing:.05em;
-            text-transform:uppercase;
-            box-shadow:0 8px 20px rgba(212,175,55,.35);
-            cursor:pointer;
-            transition:.3s;
+
+        .utility-bar {
+            background: #f7f7fb;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 20px;
+            font-family: Montserrat, sans-serif;
+            font-size: .9rem
         }
-        .la-cta:hover{
-            filter:brightness(1.05);
-            transform:translateY(-3px);
+
+        .utility-bar a {
+            color: #333;
+            text-decoration: none;
+            margin-right: 16px
         }
-        .la-right{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-        .la-card{background:#fff;border-radius:16px;overflow:hidden;min-height:260px;border:1px solid #ece9e1}
-        .la-main{grid-column:1/3;min-height:360px}
-        .la-card{background-size:cover;background-position:center}
-        .collection-section{background:#fff;padding:48px 0}
-        .collection-marquee{display:flex;gap:40px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:18px}
-        .mark{font-family:'Playfair Display',serif;color:#111;font-size:clamp(1.4rem,2.4vw,2rem);letter-spacing:.02em}
-        .best-sellers{background:#fff;padding:48px 0}
-        .best-sellers .products-grid{grid-template-columns:repeat(4,minmax(220px,1fr))}
-        .best-sellers .product-card{background:#fff;border:1px solid #ece9e1;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.06)}
-        .best-sellers .product-image{height:220px;background:#faf9f6}
-        .best-sellers .product-info{color:#111}
-        .best-sellers .product-category{color:#6f6b66}
-        .best-sellers .wishlist-btn{background:#fff;color:#111;border:1px solid #e5e2dc}
-        .category-section{background:#000}
-        .category-grid{display:grid;grid-template-columns:repeat(3,minmax(160px,1fr));gap:18px}
-        .category-tile{position:relative;display:block;overflow:hidden;border-radius:14px;background:#111;cursor:pointer;transition:transform .6s cubic-bezier(0.16,1,0.3,1)}
-        .category-tile:hover{transform:translateY(-4px)}
-        .tile-image{height:180px;background:#1a1a1a;background-size:cover;background-position:center;filter:saturate(1.05) contrast(1.05)}
-        .tile-label{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.5);color:#fff;padding:8px 12px;border-radius:10px;font-family:Montserrat,sans-serif;letter-spacing:.12em;text-transform:uppercase;font-size:.8rem}
-        .products-grid{display:grid;grid-template-columns:repeat(4,minmax(220px,1fr));gap:22px;margin-top:20px}
-        .product-card{background:#111;border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden}
-        .product-image{position:relative;height:240px;background:#1a1a1a}
-        .product-image img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(0.16,1,0.3,1)}
-        .product-card:hover .product-image img{transform:scale(1.04)}
-        .wishlist-btn{position:absolute;right:12px;top:12px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;transition:.3s}
-        .wishlist-btn:hover{background:rgba(0,0,0,.7)}
-        .product-info{padding:14px;color:#fff}
-        .product-info h3{font-family:'Playfair Display',serif;font-weight:400;font-size:1.2rem;margin-bottom:4px}
-        .product-category{font-family:Montserrat,sans-serif;color:#bdb9b4;font-size:.9rem;margin-bottom:8px}
-        .product-price{color:var(--lux-gold);font-family:Montserrat,sans-serif;font-weight:600;margin-bottom:12px}
-        .btn{display:inline-block}
-        .btn-add-cart{
-            display:inline-block;
-            background:linear-gradient(135deg,#e6c35a,#b8962e);
-            color:#fff;
-            border:none;
-            padding:9px 20px;
-            border-radius:24px;
-            text-decoration:none;
-            font-family:Montserrat,sans-serif;
-            font-weight:600;
-            letter-spacing:.05em;
-            text-transform:uppercase;
-            box-shadow:0 8px 20px rgba(212,175,55,.35);
-            cursor:pointer;
-            transition:.3s;
-            width:auto;
+
+        .sr {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: all .6s cubic-bezier(0.16, 1, 0.3, 1)
         }
-        .btn-add-cart:hover{
-            filter:brightness(1.05);
-            transform:translateY(-3px);
+
+        .sr.reveal {
+            opacity: 1;
+            transform: translateY(0)
         }
-        .gift-hero{position:relative;background:var(--lux-beige);min-height:50vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-        .gift-media{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1584302179602-e4c3d3fd629d?q=80&w=1600&fit=crop');background-size:cover;background-position:center;opacity:.35}
-        .gift-overlay{position:relative;text-align:center;padding:40px;z-index:1}
-        .gift-eyebrow{font-family:Montserrat,sans-serif;letter-spacing:.4em;text-transform:uppercase;color:#6f6b66;font-size:clamp(.8rem,1.16vw,1rem)}
-        .gift-title{font-family:'Playfair Display',serif;color:#111;font-weight:400;font-size:clamp(2rem,4vw,3rem);margin:10px 0 8px}
-        .gift-copy{font-family:Montserrat,sans-serif;color:#6f6b66;font-size:clamp(1rem,1.3vw,1.15rem);margin-bottom:18px}
-        .gift-cta{
-            display:inline-block;
-            background:linear-gradient(135deg,#e6c35a,#b8962e);
-            color:#fff;
-            padding:9px 20px;
-            border-radius:24px;
-            text-decoration:none;
-            font-family:Montserrat,sans-serif;
-            font-weight:600;
-            letter-spacing:.05em;
-            text-transform:uppercase;
-            box-shadow:0 8px 20px rgba(212,175,55,.35);
-            cursor:pointer;
-            transition:.3s;
+
+        .hero-slider {
+            position: relative;
+            height: 100vh;
+            min-height: 560px;
+            background: #000;
+            color: #fff;
+            overflow: hidden
         }
-        .gift-cta:hover{
-            filter:brightness(1.05);
-            transform:translateY(-3px);
+
+        .hero-slides {
+            position: absolute;
+            inset: 0
         }
-        .testimonials{background:#fff;padding:56px 0}
-        .testi-two{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
-        .testi-img{min-height:340px;border-radius:16px;background-image:url('https://images.unsplash.com/photo-1519677100203-a0e668c92439?q=80&w=1200&fit=crop');background-size:cover;background-position:center}
-        .testi-card{background:#f7f6f3;border:1px solid #ece9e1;border-radius:16px;padding:28px}
-        .testi-title{font-family:'Playfair Display',serif;color:#111;font-size:clamp(1.8rem,3vw,2.2rem);text-align:center;margin-bottom:10px}
-        .testi-copy{font-family:Montserrat,sans-serif;color:#6f6b66;text-align:center;margin-bottom:12px}
-        .testi-author{font-family:Montserrat,sans-serif;color:#111;text-align:center}
-        .whatsapp-float{position:fixed;right:18px;bottom:18px;background:#25D366;color:#fff;border-radius:50%;width:54px;height:54px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.4rem;box-shadow:0 8px 16px rgba(0,0,0,.2)}
-        .assurance{background:#fff;padding:48px 0}
-        .assurance-grid{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:16px;margin-top:18px}
-        .assurance-item{display:flex;align-items:center;gap:12px;padding:16px;border:1px solid #ece9e1;border-radius:12px;background:#faf9f6}
-        .assurance-item span{color:var(--lux-gold);font-size:1.2rem}
-        .assurance-item p{font-family:Montserrat,sans-serif;color:#111}
-        @media (max-width:1024px){.products-grid{grid-template-columns:repeat(3,1fr)}.best-sellers .products-grid{grid-template-columns:repeat(3,1fr)}.collection-marquee{gap:22px}.testi-two{grid-template-columns:1fr}}
-        @media (max-width:640px){.hero-slider{height:80vh}.products-grid{grid-template-columns:repeat(2,1fr)}.best-sellers .products-grid{grid-template-columns:repeat(2,1fr)}.collection-marquee{justify-content:flex-start}.category-grid{grid-template-columns:repeat(2,1fr)}.tile-image{height:140px}.gift-hero{min-height:46vh}.assurance-grid{grid-template-columns:1fr}}
+
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity .6s cubic-bezier(0.16, 1, 0.3, 1)
+        }
+
+        .hero-slide.active {
+            opacity: 1
+        }
+
+        .hero-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.05) saturate(1.05)
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 24px
+        }
+
+        .hero-eyebrow {
+            letter-spacing: .4em;
+            text-transform: uppercase;
+            color: var(--lux-gold);
+            font-family: Montserrat, sans-serif;
+            font-size: clamp(.7rem, 1.16vw, .95rem);
+            margin-bottom: 16px
+        }
+
+        .hero-heading {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            letter-spacing: -.01em;
+            font-size: clamp(2.4rem, 6vw, 5rem);
+            line-height: 1.08;
+            margin-bottom: 14px
+        }
+
+        .hero-copy {
+            font-family: Montserrat, sans-serif;
+            color: #dad7d2;
+            font-size: clamp(1rem, 1.4vw, 1.2rem);
+            letter-spacing: .02em;
+            margin-bottom: 28px
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center
+        }
+
+        .cta-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #e6c35a, #b8962e);
+            color: #fff;
+            padding: 9px 20px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-family: Montserrat, sans-serif;
+            font-weight: 600;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, .35);
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .cta-primary:hover {
+            filter: brightness(1.05);
+            transform: translateY(-3px);
+        }
+
+        .hero-dots {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 24px;
+            display: flex;
+            gap: 8px;
+            justify-content: center
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .4);
+            border: none;
+            cursor: pointer;
+            transition: .3s
+        }
+
+        .dot.active {
+            background: #fff
+        }
+
+        .lux-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            color: #fff;
+            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+            letter-spacing: .02em;
+            text-align: center;
+            margin: 56px 0 8px
+        }
+
+        .lux-title.dark {
+            color: #111
+        }
+
+        .lux-subtitle {
+            font-family: Montserrat, sans-serif;
+            color: #bdb9b4;
+            font-size: clamp(.95rem, 1.4vw, 1.1rem);
+            text-align: center;
+            margin-bottom: 28px
+        }
+
+        .lux-subtitle.dark {
+            color: #6f6b66
+        }
+
+        .latest-arrivals {
+            background: var(--lux-beige);
+            padding: 48px 0
+        }
+
+        .la-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            gap: 24px;
+            align-items: center
+        }
+
+        .la-left {
+            text-align: left;
+            background: #fff;
+            border: 1px solid #ece9e1;
+            border-radius: 16px;
+            padding: 28px
+        }
+
+        .la-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            color: #111;
+            font-size: clamp(1.9rem, 3vw, 2.4rem)
+        }
+
+        .la-copy {
+            font-family: Montserrat, sans-serif;
+            color: #6f6b66;
+            font-size: clamp(1rem, 1.3vw, 1.15rem);
+            margin: 10px 0 16px
+        }
+
+        .la-cta {
+            display: inline-block;
+            background: linear-gradient(135deg, #e6c35a, #b8962e);
+            color: #fff;
+            padding: 9px 20px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-family: Montserrat, sans-serif;
+            font-weight: 600;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, .35);
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .la-cta:hover {
+            filter: brightness(1.05);
+            transform: translateY(-3px);
+        }
+
+        .la-right {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px
+        }
+
+        .la-card {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            min-height: 260px;
+            border: 1px solid #ece9e1
+        }
+
+        .la-main {
+            grid-column: 1/3;
+            min-height: 360px
+        }
+
+        .la-card {
+            background-size: cover;
+            background-position: center
+        }
+
+        .collection-section {
+            background: #fff;
+            padding: 48px 0
+        }
+
+        .collection-marquee {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 18px
+        }
+
+        .mark {
+            font-family: 'Playfair Display', serif;
+            color: #111;
+            font-size: clamp(1.4rem, 2.4vw, 2rem);
+            letter-spacing: .02em
+        }
+
+        .best-sellers {
+            background: #fff;
+            padding: 48px 0
+        }
+
+        .best-sellers .products-grid {
+            grid-template-columns: repeat(4, minmax(220px, 1fr))
+        }
+
+        .best-sellers .product-card {
+            background: #fff;
+            border: 1px solid #ece9e1;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .06)
+        }
+
+        .best-sellers .product-image {
+            height: 220px;
+            background: #faf9f6
+        }
+
+        .best-sellers .product-info {
+            color: #111
+        }
+
+        .best-sellers .product-category {
+            color: #6f6b66
+        }
+
+        .best-sellers .wishlist-btn {
+            background: #fff;
+            color: #111;
+            border: 1px solid #e5e2dc
+        }
+
+        .category-section {
+            background: #000
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(160px, 1fr));
+            gap: 18px
+        }
+
+        .category-tile {
+            position: relative;
+            display: block;
+            overflow: hidden;
+            border-radius: 14px;
+            background: #111;
+            cursor: pointer;
+            transition: transform .6s cubic-bezier(0.16, 1, 0.3, 1)
+        }
+
+        .category-tile:hover {
+            transform: translateY(-4px)
+        }
+
+        .tile-image {
+            height: 180px;
+            background: #1a1a1a;
+            background-size: cover;
+            background-position: center;
+            filter: saturate(1.05) contrast(1.05)
+        }
+
+        .tile-label {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            background: rgba(0, 0, 0, .5);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-family: Montserrat, sans-serif;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            font-size: .8rem
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(220px, 1fr));
+            gap: 22px;
+            margin-top: 20px
+        }
+
+        .product-card {
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 14px;
+            overflow: hidden
+        }
+
+        .product-image {
+            position: relative;
+            height: 240px;
+            background: #1a1a1a
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .6s cubic-bezier(0.16, 1, 0.3, 1)
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.04)
+        }
+
+        .wishlist-btn {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            background: rgba(0, 0, 0, .5);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            transition: .3s
+        }
+
+        .wishlist-btn:hover {
+            background: rgba(0, 0, 0, .7)
+        }
+
+        .product-info {
+            padding: 14px;
+            color: #fff
+        }
+
+        .product-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            font-size: 1.2rem;
+            margin-bottom: 4px
+        }
+
+        .product-category {
+            font-family: Montserrat, sans-serif;
+            color: #bdb9b4;
+            font-size: .9rem;
+            margin-bottom: 8px
+        }
+
+        .product-price {
+            color: var(--lux-gold);
+            font-family: Montserrat, sans-serif;
+            font-weight: 600;
+            margin-bottom: 12px
+        }
+
+        .btn {
+            display: inline-block
+        }
+
+        .btn-add-cart {
+            display: inline-block;
+            background: linear-gradient(135deg, #e6c35a, #b8962e);
+            color: #fff;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-family: Montserrat, sans-serif;
+            font-weight: 600;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, .35);
+            cursor: pointer;
+            transition: .3s;
+            width: auto;
+        }
+
+        .btn-add-cart:hover {
+            filter: brightness(1.05);
+            transform: translateY(-3px);
+        }
+
+        .gift-hero {
+            position: relative;
+            background: var(--lux-beige);
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden
+        }
+
+        .gift-media {
+            position: absolute;
+            inset: 0;
+            background-image: url('https://images.unsplash.com/photo-1584302179602-e4c3d3fd629d?q=80&w=1600&fit=crop');
+            background-size: cover;
+            background-position: center;
+            opacity: .35
+        }
+
+        .gift-overlay {
+            position: relative;
+            text-align: center;
+            padding: 40px;
+            z-index: 1
+        }
+
+        .gift-eyebrow {
+            font-family: Montserrat, sans-serif;
+            letter-spacing: .4em;
+            text-transform: uppercase;
+            color: #6f6b66;
+            font-size: clamp(.8rem, 1.16vw, 1rem)
+        }
+
+        .gift-title {
+            font-family: 'Playfair Display', serif;
+            color: #111;
+            font-weight: 400;
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin: 10px 0 8px
+        }
+
+        .gift-copy {
+            font-family: Montserrat, sans-serif;
+            color: #6f6b66;
+            font-size: clamp(1rem, 1.3vw, 1.15rem);
+            margin-bottom: 18px
+        }
+
+        .gift-cta {
+            display: inline-block;
+            background: linear-gradient(135deg, #e6c35a, #b8962e);
+            color: #fff;
+            padding: 9px 20px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-family: Montserrat, sans-serif;
+            font-weight: 600;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, .35);
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .gift-cta:hover {
+            filter: brightness(1.05);
+            transform: translateY(-3px);
+        }
+
+        .testimonials {
+            background: #fff;
+            padding: 56px 0
+        }
+
+        .testi-two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: center
+        }
+
+        .testi-img {
+            min-height: 340px;
+            border-radius: 16px;
+            background-image: url('https://images.unsplash.com/photo-1519677100203-a0e668c92439?q=80&w=1200&fit=crop');
+            background-size: cover;
+            background-position: center
+        }
+
+        .testi-card {
+            background: #f7f6f3;
+            border: 1px solid #ece9e1;
+            border-radius: 16px;
+            padding: 28px
+        }
+
+        .testi-title {
+            font-family: 'Playfair Display', serif;
+            color: #111;
+            font-size: clamp(1.8rem, 3vw, 2.2rem);
+            text-align: center;
+            margin-bottom: 10px
+        }
+
+        .testi-copy {
+            font-family: Montserrat, sans-serif;
+            color: #6f6b66;
+            text-align: center;
+            margin-bottom: 12px
+        }
+
+        .testi-author {
+            font-family: Montserrat, sans-serif;
+            color: #111;
+            text-align: center
+        }
+
+        .whatsapp-float {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            background: #25D366;
+            color: #fff;
+            border-radius: 50%;
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.4rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, .2)
+        }
+
+        .assurance {
+            background: #fff;
+            padding: 48px 0
+        }
+
+        .assurance-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 18px
+        }
+
+        .assurance-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border: 1px solid #ece9e1;
+            border-radius: 12px;
+            background: #faf9f6
+        }
+
+        .assurance-item span {
+            color: var(--lux-gold);
+            font-size: 1.2rem
+        }
+
+        .assurance-item p {
+            font-family: Montserrat, sans-serif;
+            color: #111
+        }
+
+        @media (max-width:1024px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr)
+            }
+
+            .best-sellers .products-grid {
+                grid-template-columns: repeat(3, 1fr)
+            }
+
+            .collection-marquee {
+                gap: 22px
+            }
+
+            .testi-two {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media (max-width:640px) {
+            .hero-slider {
+                height: 80vh
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .best-sellers .products-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .collection-marquee {
+                justify-content: flex-start
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .tile-image {
+                height: 140px
+            }
+
+            .gift-hero {
+                min-height: 46vh
+            }
+
+            .assurance-grid {
+                grid-template-columns: 1fr
+            }
+        }
     </style>
 
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
 
-    @keyframes kenburns {
-        0% { transform: scale(1); }
-        100% { transform: scale(1.15); }
-    }
+        @keyframes kenburns {
+            0% {
+                transform: scale(1);
+            }
 
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+            100% {
+                transform: scale(1.15);
+            }
+        }
 
-    /* Hover Effects */
-    #concierge-trigger button:hover {
-        background: #f1f1f1 !important;
-        transform: translateY(-2px);
-    }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
 
-    #concierge-trigger a:hover {
-        background: rgba(255,255,255,0.1) !important;
-        border-color: white !important;
-    }
-    
-    input:focus { border-bottom: 1px solid #1a1a1a !important; }
-</style>
-    
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hover Effects */
+        #concierge-trigger button:hover {
+            background: #f1f1f1 !important;
+            transform: translateY(-2px);
+        }
+
+        #concierge-trigger a:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-color: white !important;
+        }
+
+        input:focus {
+            border-bottom: 1px solid #1a1a1a !important;
+        }
+    </style>
+
 
     <!-- Footer -->
     <footer class="footer">
@@ -1428,7 +2155,7 @@ align-items:start;
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             checkAuthStatus();
             updateCartCount();
             updateWishlistCount();
@@ -1465,7 +2192,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 populateCategories(products);
                 populateBestSellers(products);
                 populateTrending(products);
-            } catch (error) {}
+            } catch (error) { }
         }
         function populateLatestArrivalsTwo(products) {
             const mainEl = document.getElementById('laMain');
@@ -1478,17 +2205,17 @@ document.addEventListener('DOMContentLoaded', function() {
         function populateCollectionsMarquee() {
             // Static marquee labels styled like brand marks
         }
-function populateTrending(products) {
+        function populateTrending(products) {
             const items = Array.isArray(products)
                 ? products.filter(p => p && (p.isActive !== false && p.isActive !== 0))
                 : [];
             const topItems = items.slice(0, 4);
             renderTrendingGrid('featuredProducts', topItems);
         }
-        function renderTrendingGrid(containerId, items){
+        function renderTrendingGrid(containerId, items) {
             const container = document.getElementById(containerId);
-            if(!container) return;
-            if(!items || items.length === 0){
+            if (!container) return;
+            if (!items || items.length === 0) {
                 container.innerHTML = '<p class="no-products">Coming soon...</p>';
                 return;
             }
@@ -1551,14 +2278,14 @@ function populateTrending(products) {
         }
         function populateBestSellers(products) {
             const items = Array.isArray(products) ? products.slice() : [];
-            items.sort((a,b) => Number(a.stock || 9999) - Number(b.stock || 9999));
-            const top4 = items.slice(0,4);
+            items.sort((a, b) => Number(a.stock || 9999) - Number(b.stock || 9999));
+            const top4 = items.slice(0, 4);
             renderBestSellersGrid('bestSellersGrid', top4);
         }
-        function renderBestSellersGrid(containerId, items){
+        function renderBestSellersGrid(containerId, items) {
             const container = document.getElementById(containerId);
             if (!container) return;
-            if (!items || !items.length){
+            if (!items || !items.length) {
                 container.innerHTML = '<p class="no-products">Coming soon...</p>';
                 return;
             }
@@ -1587,7 +2314,7 @@ function populateTrending(products) {
                 </a>
             `).join('');
         }
-function initHeroSlider() {
+        function initHeroSlider() {
             const slides = Array.from(document.querySelectorAll('.hero-slide'));
             const dots = Array.from(document.querySelectorAll('.dot'));
             let index = 0;
@@ -1607,4 +2334,5 @@ function initHeroSlider() {
     </script>
     <a class="whatsapp-float" href="https://wa.me/918010585283" target="_blank">✆</a>
 </body>
+
 </html>
